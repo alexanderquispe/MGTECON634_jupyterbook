@@ -79,11 +79,6 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
-        
-      
-      
-      <img src="_static/logo.jpg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Machine Learning-based Causal Inference Tutorial</h1>
@@ -194,14 +189,14 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Connect with source repository"><i class="fab fa-github"></i></button>
     <div class="dropdown-buttons sourcebuttons">
         <a class="repository-button"
-            href="https://github.com/alexanderquispe/ml_ci_tutorial"><button type="button" class="btn btn-secondary topbarbtn"
+            href="https://github.com/alexanderquispe/MGTECON634_jupyterbook"><button type="button" class="btn btn-secondary topbarbtn"
                 data-toggle="tooltip" data-placement="left" title="Source repository"><i
                     class="fab fa-github"></i>repository</button></a>
         <a class="issues-button"
-            href="https://github.com/alexanderquispe/ml_ci_tutorial/issues/new?title=Issue%20on%20page%20%2F5_policy_evaluation_1.html&body=Your%20issue%20content%20here."><button
+            href="https://github.com/alexanderquispe/MGTECON634_jupyterbook/issues/new?title=Issue%20on%20page%20%2F5_policy_evaluation_1.html&body=Your%20issue%20content%20here."><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Open an issue"><i class="fas fa-lightbulb"></i>open issue</button></a>
-        <a class="edit-button" href="https://github.com/alexanderquispe/ml_ci_tutorial/edit/master/Python_tutorials/5_policy_evaluation_1.ipynb"><button
+        <a class="edit-button" href="https://github.com/alexanderquispe/MGTECON634_jupyterbook/edit/master/_build/jupyter_execute/5_policy_evaluation_1.ipynb"><button
                 type="button" class="btn btn-secondary topbarbtn" data-toggle="tooltip" data-placement="left"
                 title="Edit this page"><i class="fas fa-pencil-alt"></i>suggest edit</button></a>
     </div>
@@ -221,7 +216,7 @@ const thebe_selector_output = ".output, .cell_output"
         aria-label="Launch interactive content"><i class="fas fa-rocket"></i></button>
     <div class="dropdown-buttons">
         
-        <a class="binder-button" href="https://mybinder.org/v2/gh/alexanderquispe/ml_ci_tutorial/master?urlpath=tree/Python_tutorials/5_policy_evaluation_1.ipynb"><button type="button"
+        <a class="binder-button" href="https://mybinder.org/v2/gh/alexanderquispe/MGTECON634_jupyterbook/master?urlpath=tree/_build/jupyter_execute/5_policy_evaluation_1.ipynb"><button type="button"
                 class="btn btn-secondary topbarbtn" title="Launch Binder" data-toggle="tooltip"
                 data-placement="left"><img class="binder-button-logo"
                     src="_static/images/logo_binder.svg"
@@ -229,7 +224,7 @@ const thebe_selector_output = ".output, .cell_output"
         
         
         
-        <a class="colab-button" href="https://colab.research.google.com/github/alexanderquispe/ml_ci_tutorial/blob/master/Python_tutorials/5_policy_evaluation_1.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
+        <a class="colab-button" href="https://colab.research.google.com/github/alexanderquispe/MGTECON634_jupyterbook/blob/master/_build/jupyter_execute/5_policy_evaluation_1.ipynb"><button type="button" class="btn btn-secondary topbarbtn"
                 title="Launch Colab" data-toggle="tooltip" data-placement="left"><img class="colab-button-logo"
                     src="_static/images/logo_colab.png"
                     alt="Interact on Colab">Colab</button></a>
@@ -530,7 +525,7 @@ E[Y(\pi(X_i))] &amp;= E[Y_i | A, W_i = 1] P(A) +  E[Y_i | A^c, W_i = 0] P(A^c), 
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.1463245415745544 Std. Error 0.01271263546282025
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.13760453396306346 Std. Error 0.013397448906573163
 </pre></div>
 </div>
 </div>
@@ -564,7 +559,7 @@ E[Y_i(\pi’(X_i))] = pE[Y_i | W_i=1] + (1-p)E[Y_i | W_i = 0],
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.022507517188991265 Std. Error 0.01369786804334294
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.002476717257307943 Std. Error 0.013905654227644169
 </pre></div>
 </div>
 </div>
@@ -599,7 +594,7 @@ E[Y(\pi(X_i)) - Y(\pi’’(X_i))]
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.05486860334910536 Std. Error: 0.0010107854403380125
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.061283288822524006 Std. Error: 0.001178977546329498
 </pre></div>
 </div>
 </div>
@@ -628,7 +623,7 @@ which suggests an estimator based on sample averages as above.</p>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.0671869798992261 Std. Error: 0.006761551310009502
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.07481266676896872 Std. Error: 0.006816663401738645
 </pre></div>
 </div>
 </div>
@@ -757,7 +752,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;econml.dml.causal_forest.CausalForestDML at 0x2959e2f7a48&gt;
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;econml.dml.causal_forest.CausalForestDML at 0x1811b0418b0&gt;
 </pre></div>
 </div>
 </div>
@@ -805,7 +800,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.04909281018025912 Std. Error: 0.008388507000715159
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.08010977883331921 Std. Error: 0.008588916500066832
 </pre></div>
 </div>
 </div>
@@ -823,7 +818,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: -0.005643484970411176 Std. Error: 0.008956961106423536
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.007035150146951511 Std. Error: 0.009022698887102675
 </pre></div>
 </div>
 </div>
@@ -854,7 +849,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diff estimate: 0.06183896491449065 Std. Error: 0.005503825578682608
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Diff estimate: 0.06490194225674514 Std. Error: 0.005623951011401793
 </pre></div>
 </div>
 </div>
@@ -993,7 +988,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.35221836694529596 Std. Error: 0.004051622185299656
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Value estimate: 0.352461300323566 Std. Error: 0.004045907648844314
 </pre></div>
 </div>
 </div>
@@ -1014,7 +1009,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.08580153013260283 Std. Error: 0.002588590468228363
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Difference estimate: 0.08597369411615015 Std. Error: 0.0025852242026895
 </pre></div>
 </div>
 </div>
@@ -1032,7 +1027,7 @@ If we "naively" used the estimators based on sample averages above, the policy v
     {
         requestKernel: true,
         binderOptions: {
-            repo: "alexanderquispe/ml_ci_tutorial",
+            repo: "alexanderquispe/MGTECON634_jupyterbook",
             ref: "master",
         },
         codeMirrorConfig: {
