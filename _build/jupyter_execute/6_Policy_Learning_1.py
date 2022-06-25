@@ -38,7 +38,7 @@ from econml.policy import PolicyForest, PolicyTree
 random.seed(12)
 
 
-# In[2]:
+# In[3]:
 
 
 # A randomized setting.
@@ -98,7 +98,7 @@ data.head(4)
 # The next snippet estimates the conditional treatment effect function via a Lasso model with splines. Note the data splitting.
 # 
 
-# In[3]:
+# In[4]:
 
 
 # Preparing to run a regression with splines (\\piecewise polynomials).
@@ -115,7 +115,7 @@ fmla_xw = "y ~ " +  bs_x(0, add = False) + bs_x(1) + bs_x(2) + bs_x(3)
 fmla_xw
 
 
-# In[4]:
+# In[10]:
 
 
 # Data-splitting
@@ -131,7 +131,7 @@ y_test, xw_test = dmatrices(fmla_xw, data_test)
 y_test, y_train = np.ravel(y_test), np.ravel(y_train)
 
 
-# In[5]:
+# In[11]:
 
 
 # Fitting the outcome model on the *training* data
@@ -172,7 +172,7 @@ e_hat = np.repeat(.5, n_row)
 # 
 # 
 
-# In[6]:
+# In[14]:
 
 
 # Only valid in randomized settings.
@@ -209,7 +209,7 @@ extr_val_sd(Y, W, a)
 # 
 # 
 
-# In[7]:
+# In[19]:
 
 
 # Valid in randomized settings and observational settings with unconfoundedness and overlap.
@@ -232,7 +232,7 @@ ve, std
 # 
 # 
 
-# In[8]:
+# In[20]:
 
 
 # Make a causal_forest object
@@ -245,7 +245,7 @@ forest = causal_forest(
 )
 
 
-# In[9]:
+# In[25]:
 
 
 # Using the entire data
@@ -269,7 +269,7 @@ pi_hat = tau_hat_oob > 0
 # 
 # 
 
-# In[10]:
+# In[26]:
 
 
 # Only valid in randomized settings.
@@ -284,7 +284,7 @@ extr_val_sd(y, w, a)
 # 
 # 
 
-# In[11]:
+# In[27]:
 
 
 # Valid in randomized settings and observational settings with unconfoundedness and overlap.
@@ -348,7 +348,7 @@ np.mean(gamma_hat_pi), np.std(gamma_hat_pi)/ np.sqrt(len(gamma_hat_pi))
 # Let's walk through an example for the data simulated above. The first step is to construct AIPW scores \eqref{aipw}. 
 # 
 
-# In[12]:
+# In[28]:
 
 
 # Randomized setting: pass the known treatment assignment as an argument.
@@ -374,7 +374,7 @@ def double_robust_score(forest_model, y, w, x):
 gamma_hat_0, gamma_hat_0 = double_robust_score(forest_prm_p, y, w, x)
 
 
-# In[13]:
+# In[29]:
 
 
 gamma_mtrx = pd.DataFrame(
@@ -389,7 +389,7 @@ gamma_mtrx = pd.DataFrame(
 # 
 # 
 
-# In[14]:
+# In[31]:
 
 
 # Set train size
@@ -401,7 +401,7 @@ policy = PolicyTree(
 ).fit(x.iloc[ : train], gamma_mtrx.iloc[ : train])
 
 
-# In[15]:
+# In[36]:
 
 
 # Predict on the test subsets
@@ -412,7 +412,7 @@ pi_hat = policy.predict(x.iloc[int(n/2):, ])
 # We can plot the tree.
 # 
 
-# In[16]:
+# In[38]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
@@ -426,7 +426,7 @@ plt.show()
 # To evaluate the policy, we again use what we learned in the previous chapter, remembering that we can only use the test set for evaluation. In randomized settings, we can use the following estimator based on sample averages.
 # 
 
-# In[17]:
+# In[39]:
 
 
 a = pi_hat == 1
@@ -439,7 +439,7 @@ extr_val_sd(y1, w1, a)
 # 
 # 
 
-# In[18]:
+# In[40]:
 
 
 # Using the remaining AIPW scores produces an estimate that, in large samples, has smaller standard error.
@@ -461,7 +461,7 @@ val_st, val_sderr
 # Let's apply the methods above to our `welfare` dataset, as used in previous chapters.
 # 
 
-# In[19]:
+# In[41]:
 
 
 # Read in data
@@ -491,7 +491,7 @@ covariates = ["age", "polviews", "income", "educ", "marital", "sex"]
 # In this dataset, however, the effect seems to be mostly positive throughout. That is, i.e., most individuals respond "yes" more often when they are asked about "welfare" than about "assistance to the poor". To make the problem more interesting, we'll artificially modify the problem by introducing a cost of asking about welfare. This is just for illustration here, although there are natural examples in which treatment is indeed costly. Note in the code below how we subtract a cost of `.3` from the AIPW scores associated with treatment.
 # 
 
-# In[20]:
+# In[42]:
 
 
 # Prepare data
@@ -532,7 +532,7 @@ num_leave = len(set(leaf))
 # policy.pre leaf by obsservacion
 
 
-# In[21]:
+# In[43]:
 
 
 plt.figure(figsize=(25, 5))
@@ -544,7 +544,7 @@ plt.show()
 # 
 # 
 
-# In[22]:
+# In[46]:
 
 
 a = pi_hat == 1
@@ -558,7 +558,7 @@ print("Print value estimate [sample avg], and standard error")
 extr_val_sd(y_test, w_test, a)
 
 
-# In[23]:
+# In[47]:
 
 
 # Valid in both randomized and obs setting with unconf + overlap.
@@ -575,7 +575,7 @@ np.mean(gamma_hat_pi), np.std(gamma_hat_pi) / np.sqrt(len(gamma_hat_pi))
 # 
 # 
 
-# In[24]:
+# In[49]:
 
 
 # Only valid for randomized setting.
@@ -608,7 +608,7 @@ diff_estimate, diff_strerr
 # \end{equation}
 # 
 
-# In[25]:
+# In[50]:
 
 
 ## Olny from randomized settings
@@ -627,7 +627,7 @@ ols_coef['Coef.'] = ols_coef['Coef.'] - cost
 ols_coef.iloc[2:4, 0:3]
 
 
-# In[26]:
+# In[51]:
 
 
 # Valid in randomized settings and observational settings with unconfoundedness+overlap
@@ -648,7 +648,7 @@ ols
 #   H_0: \mathop{\mathrm{E}}[Y_i(1) - Y_i(0)| \text{Leaf} = 1] = \mathop{\mathrm{E}}[Y_i(1) - Y_i(0)| \text{Leaf} = \ell] \qquad \text{for }\ell \geq 2
 # \end{equation}
 
-# In[27]:
+# In[52]:
 
 
 # Only valid in randomized settings.
@@ -660,7 +660,7 @@ ols_coef = ols.summary2().tables[1].reset_index()
 ols_coef.loc[ols_coef["index"].str.contains(":")].iloc[:, 0:3]
 
 
-# In[28]:
+# In[53]:
 
 
 # Valid in randomized settings and observational settings with unconfoundedness+overlap.
@@ -676,7 +676,7 @@ ols.iloc[:, 0:3]
 # \end{equation}
 # 
 
-# In[29]:
+# In[54]:
 
 
 df = pd.DataFrame()
@@ -710,7 +710,7 @@ df["pi_hat"] = ["Control", "Treatment"]*len(covariates)
 df.head(3)
 
 
-# In[30]:
+# In[56]:
 
 
 df1 = df.pivot("covariate", "pi_hat", "scaling").astype(float)
@@ -758,7 +758,7 @@ plt.title("Average covariate values within each leaf")
 # Let's put the above into practice. For illustration, we will generate random costs for our data. We'll assume that the costs of treatment are drawn from a conditionally Exponential distribution, and that there are no costs for no treating.
 # 
 
-# In[31]:
+# In[58]:
 
 
 # Creating random costs.
@@ -773,7 +773,7 @@ data['cost'] = C = np.select(cond, do_it, 0)
 # 
 # 
 
-# In[32]:
+# In[79]:
 
 
 # Assuming that the assignment probability is known.
@@ -811,7 +811,7 @@ gamm_forest = forest.fit(data['cost'].iloc[: train], w.iloc[: train], X=x.iloc[:
 gamm_hat = gamm_forest.effect(x.iloc[train : ])
 
 
-# In[33]:
+# In[81]:
 
 
 # Rankings
@@ -819,7 +819,7 @@ rank_ignore_cost = (-tau_hat).argsort()
 rank_ratio = (-gamm_hat).argsort()
 
 
-# In[34]:
+# In[82]:
 
 
 # Create w_hat_test data_frame
@@ -828,7 +828,7 @@ ipw['rank_ignore_cost'] = rank_ignore_cost
 ipw['rank_ratio'] = rank_ratio
 
 
-# In[35]:
+# In[83]:
 
 
 # Cumulative benefit and cost of treatment (normalized) for a policy that ignores costs.
@@ -840,7 +840,7 @@ treatment_value_ratio = np.cumsum(ipw.sort_values("rank_ratio")['treatment_ipw']
 treatment_cost_ratio = np.cumsum(ipw.sort_values("rank_ratio")['cost_ipw']) / np.sum(ipw['cost_ipw'])
 
 
-# In[36]:
+# In[84]:
 
 
 plt.plot(treatment_cost_ignore_cost, treatment_value_ignore_cost, '#0d5413', label='Ignoring costs')
@@ -871,7 +871,7 @@ plt.show()
 # As readers with a little more background in causal inference may note, \eqref{rho-iv} coincides with the definition of the conditional local average treatment effect (LATE) if we _were_ to take $W_i$ as an "instrumental variable" and $C_i$ as the "treatment". In fact, instrumental variable methods require different assumptions, so the connection with instrumental variables is tenuous (see the paper for details), but mechanically \eqref{rho-iv} provides us with an estimation procedure: we can use any method used to estimate conditional LATE to produce an estimate $\hat{\rho}$.
 # 
 
-# In[37]:
+# In[85]:
 
 
 # Estimating rho(x) directly via instrumental forests.
@@ -879,14 +879,14 @@ plt.show()
 i_f = instrumental_forest().fit(x.iloc[:train], w.iloc[:train], y.iloc[:train], Z = data['cost'].iloc[:train])
 
 
-# In[38]:
+# In[86]:
 
 
 # Predict and compute and estimate of the ranking on a test set.
 rho_iv = i_f.predict(x.iloc[train : ])
 
 
-# In[39]:
+# In[95]:
 
 
 # Create objects
@@ -897,7 +897,7 @@ treatment_valu_iv = np.cumsum(ipw.sort_values("rank_iv")['treatment_ipw']) / sum
 treatment_cost_iv = np.cumsum(ipw.sort_values("rank_iv")["cost_ipw"]) / sum(ipw['cost_ipw'])
 
 
-# In[40]:
+# In[96]:
 
 
 plt.plot(treatment_cost_ignore_cost, treatment_value_ignore_cost, '#0d5413', label='Ignoring costs')
@@ -913,7 +913,7 @@ plt.show()
 
 # In this example, both the “direct ratio” and the solution based on instrumental forests have similar performance. This isn’t always the case. When the ratio $\rho(x)$ is simpler relative to $\tau(x)$ and $\gamma(x)$, the solution based on instrumental forests may perform better since it is estimating $\rho(x)$ directly, where the “direct ratio” solution needs to estimate the more complicated objects $\tau(x)$ and $\gamma(x)$ separately. At a high level, we should expect $\rho(x)$ to be relatively simpler when there is a strong relationship between $\tau(x)$ and $\gamma(x)$. Here, our simulated costs seem to be somewhat related to CATE (see the plot below), but perhaps not strongly enough to make the instrumental forest solution noticeably better than the one based on ratios.
 
-# In[41]:
+# In[97]:
 
 
 # plot
@@ -926,7 +926,7 @@ plt.ylabel("Esimated CATE (normalized)")
 # 
 # 
 
-# In[42]:
+# In[99]:
 
 
 t_c_i_c = pd.Series(np.array(treatment_cost_ignore_cost))
@@ -937,7 +937,7 @@ ratio = np.sum((np.array(treatment_value_ratio) - t_c_r) * (t_c_r - t_c_r.shift(
 iv = np.sum((np.array(treatment_valu_iv) - t_c_iv) * (t_c_iv - t_c_iv.shift(1)))
 
 
-# In[43]:
+# In[100]:
 
 
 pd.DataFrame({

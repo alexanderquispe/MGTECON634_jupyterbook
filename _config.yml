@@ -32,9 +32,9 @@ html:
   use_issues_button: true
 
 repository:
-  url: https://github.com/alexanderquispe/ml_ci_tutorial
+  url: https://github.com/alexanderquispe/MGTECON634_jupyterbook
   branch: master
-  path_to_book: Python_tutorials
+  path_to_book: _build/jupyter_execute/
   
   
 # Launch button settings

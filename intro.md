@@ -23,5 +23,5 @@ This JupyterBook will receive future updates. It's a draft. Not ready for public
 ```
 
 ```{admonition} Who is the book for? :class: important
-You can find all these Python scripts in this [repository](https://github.com/alexanderquispe/ml_ci_tutorial/tree/main/Python_tutorials). 
+You can find all these Python scripts in this [repository](https://github.com/alexanderquispe/MGTECON634_jupyterbook). 
 ```
