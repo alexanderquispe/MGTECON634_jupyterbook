@@ -79,6 +79,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.jpg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Machine Learning-based Causal Inference Tutorial</h1>
@@ -341,15 +346,13 @@ const thebe_selector_output = ".output, .cell_output"
 <h1><span class="section-number">5. </span>Policy Evaluation I - Binary Treatment<a class="headerlink" href="#policy-evaluation-i-binary-treatment" title="Permalink to this headline">¶</a></h1>
 <p>Source RMD file: <a class="reference external" href="https://docs.google.com/uc?export=download&amp;id=1TGPxR6L12kLeXbJeJBfCpXCnRFNA3hAC">link</a></p>
 <p><font color="#fa8072">Note: this chapter is in ‘beta’ version and may be edited in the near future.</font></p>
-<p>In previous chapters, you learned how to estimate the effect of a binary treatment on an outcome variable. We saw how to estimate the average treatment effect for the entire population <span class="math notranslate nohighlight">\(E[Y_i(1) - Y_i(0)]\)</span>, for specific subgroups <span class="math notranslate nohighlight">\(E[Y_i(1) - Y_i(0) | G_i]\)</span>, and at specific covariate values <span class="math notranslate nohighlight">\(E[Y_i(1) - Y_i(0)|X_i = x]\)</span>. One common feature of these quantities is that they compare the average effect of treating everyone (in the population, subgroup, etc) to the average effect of treating no one. But what if we had a <em>treatment rule</em> that dictated who should be treated, and who should not? Would treating some people according to this rule be better than treating no one? Can we compare two possible treatment rules? Questions like these abound in applied work, so here we’ll learn how to answer them using experimental and observational data (with appropriate assumptions).</p>
-<p>Treatment rules that dictate which groups should be treatment are called <strong>policies</strong>. Formally, we’ll define a policy (for a binary treatment) to be a mapping from a vector of observable covariates to a number in the unit interval, i.e., <span class="math notranslate nohighlight">\(\pi: x \mapsto [0,1]\)</span>. Given some vector of covariates <span class="math notranslate nohighlight">\(x\)</span>, the expression <span class="math notranslate nohighlight">\(\pi(x) = 1\)</span> indicates a unit with this covariate value should be treated, <span class="math notranslate nohighlight">\(\pi(x) = 0\)</span> indicates no treatment, and  <span class="math notranslate nohighlight">\(\pi(x) = p \in (0, 1)\)</span> indicates randomization between treatment and control with probability <span class="math notranslate nohighlight">\(p\)</span>.</p>
-<p>There are two main objects of interest in this chapter. The first is the <strong>value</strong> of a policy <span class="math notranslate nohighlight">\(\pi\)</span>, defined as the average outcome attained if we assign individuals to treatments according to the policy <span class="math notranslate nohighlight">\(\pi\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[  E[Y_i(\pi(X_i))]. \]</div>
-<p>The second object of interest is the <strong>difference in values</strong> between two policies <span class="math notranslate nohighlight">\(\pi\)</span> and <span class="math notranslate nohighlight">\(\pi'\)</span>,</p>
-<div class="math notranslate nohighlight">
-\[  E[Y_i(\pi(X_i)) - Y_i(\pi'(X_i))].\]</div>
-<p>Note how the average treatment effect (ATE) we saw in previous chapters is a difference in values taking <span class="math notranslate nohighlight">\(\pi(x) \equiv 1 \)</span> (a policy that treats everyone) and <span class="math notranslate nohighlight">\(\pi(x) \equiv 0\)</span> (a policy that treats no one).</p>
+<p>In previous chapters, you learned how to estimate the effect of a binary treatment on an outcome variable. We saw how to estimate the average treatment effect for the entire population $E[Y_i(1) - Y_i(0)]$, for specific subgroups $E[Y_i(1) - Y_i(0) | G_i]$, and at specific covariate values $E[Y_i(1) - Y_i(0)|X_i = x]$. One common feature of these quantities is that they compare the average effect of treating everyone (in the population, subgroup, etc) to the average effect of treating no one. But what if we had a <em>treatment rule</em> that dictated who should be treated, and who should not? Would treating some people according to this rule be better than treating no one? Can we compare two possible treatment rules? Questions like these abound in applied work, so here we’ll learn how to answer them using experimental and observational data (with appropriate assumptions).</p>
+<p>Treatment rules that dictate which groups should be treatment are called <strong>policies</strong>. Formally, we’ll define a policy (for a binary treatment) to be a mapping from a vector of observable covariates to a number in the unit interval, i.e., $\pi: x \mapsto [0,1]$. Given some vector of covariates $x$, the expression $\pi(x) = 1$ indicates a unit with this covariate value should be treated, $\pi(x) = 0$ indicates no treatment, and  $\pi(x) = p \in (0, 1)$ indicates randomization between treatment and control with probability $p$.</p>
+<p>There are two main objects of interest in this chapter. The first is the <strong>value</strong> of a policy $\pi$, defined as the average outcome attained if we assign individuals to treatments according to the policy $\pi$,</p>
+<p>$$  E[Y_i(\pi(X_i))]. $$</p>
+<p>The second object of interest is the <strong>difference in values</strong> between two policies $\pi$ and $\pi’$,</p>
+<p>$$  E[Y_i(\pi(X_i)) - Y_i(\pi’(X_i))].$$</p>
+<p>Note how the average treatment effect (ATE) we saw in previous chapters is a difference in values taking $\pi(x) \equiv 1 $ (a policy that treats everyone) and $\pi(x) \equiv 0$ (a policy that treats no one).</p>
 <p>Importantly, in this chapter we’ll be working with policies that are <em>pre-specified</em> — that is, that were created or decided <em>before</em> looking at the data. In the next chapter, we’ll see how to estimate a policy with desirable properties from the data.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -412,7 +415,7 @@ const thebe_selector_output = ".output, .cell_output"
 <img alt="_images/5_policy_evaluation_1_8_1.png" src="_images/5_policy_evaluation_1_8_1.png" />
 </div>
 </div>
-<p>Here’s a graph of each treated and untreated population separately. Remark two things about this plot. First, the covariate distribution between the two plots is the same — which is what we should expect in a randomized setting. Second, observations with higher values of <span class="math notranslate nohighlight">\(X_2\)</span> react positively to treatment (their blobs are darker than the untreated counterparts, which observations with lower values of <span class="math notranslate nohighlight">\(X_2\)</span> react negatively (their blobs are lighter).</p>
+<p>Here’s a graph of each treated and untreated population separately. Remark two things about this plot. First, the covariate distribution between the two plots is the same — which is what we should expect in a randomized setting. Second, observations with higher values of $X_2$ react positively to treatment (their blobs are darker than the untreated counterparts, which observations with lower values of $X_2$ react negatively (their blobs are lighter).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">f</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span>
@@ -437,17 +440,18 @@ const thebe_selector_output = ".output, .cell_output"
 </div>
 </div>
 <p>As a first example, let’s estimate the value of the following policy (assuming that it was given to or decided by us prior to looking at the data):
-$<span class="math notranslate nohighlight">\(
-  \pi(x) =
-    \begin{cases} \tag{5.1}
-     1 \quad \text{if } x_1 &gt; .5 \text{ and } x_2 &gt; .5 \\
-     0 \quad \text{otherwise}
-    \end{cases}
-\)</span>$</p>
-<p>This policy divides the plane into a “treatment” region <span class="math notranslate nohighlight">\(A\)</span> and a complementary “no treatment” region <span class="math notranslate nohighlight">\(A^c\)</span>,
-\begin{equation}
-A := { x : \pi(x) = 1 } = {x: x_{1} &gt; .5, x_{2} &gt; .5}.
-\end{equation}</p>
+$$
+\pi(x) =
+\begin{cases} \tag{5.1}
+1 \quad \text{if } x_1 &gt; .5 \text{ and } x_2 &gt; .5 \
+0 \quad \text{otherwise}
+\end{cases}
+$$</p>
+<p>This policy divides the plane into a “treatment” region $A$ and a complementary “no treatment” region $A^c$,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-e014611e-c4b8-401b-8887-24d6d73a59e8">
+<span class="eqno">(5.1)<a class="headerlink" href="#equation-e014611e-c4b8-401b-8887-24d6d73a59e8" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+  A := \{ x : \pi(x) = 1 \} = \{x: x_{1} &gt; .5, x_{2} &gt; .5\}.
+\end{equation}\]</div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">6</span><span class="p">))</span>
@@ -493,27 +497,30 @@ A := { x : \pi(x) = 1 } = {x: x_{1} &gt; .5, x_{2} &gt; .5}.
 <img alt="_images/5_policy_evaluation_1_12_1.png" src="_images/5_policy_evaluation_1_12_1.png" />
 </div>
 </div>
-<p>We’ll consider the behavior of the policy <span class="math notranslate nohighlight">\(\pi\)</span> separately within each region. In the “treatment” region <span class="math notranslate nohighlight">\(A\)</span>, its average outcome is the same as the average outcome for the treated population.</p>
-<p>\begin{equation} \tag{5.2}
-\begin{aligned}
-E[Y_i(\pi(X_i)) \ | \ A]
-&amp;= E[Y_i(1)|A]  \quad &amp;&amp;\text{because <span class="math notranslate nohighlight">\(\pi(x) = 1\)</span> for all <span class="math notranslate nohighlight">\(x \in A\)</span>,} \
-&amp;= E[Y_i|A, W_{i}=1]  \quad &amp;&amp;\text{randomized setting.} \
-\end{aligned}
-\end{equation}</p>
-<p>In the remaining region <span class="math notranslate nohighlight">\(A^c\)</span>, its average outcome is the same as the average outcome for the untreated population.</p>
-<p>\begin{equation} \tag{5.3}
-\begin{aligned}
-E[Y_i(\pi(X_i)) \ | \ A^c]
-&amp;= E[Y_i(0)|A^c]  \quad &amp;&amp;\text{because <span class="math notranslate nohighlight">\(\pi(x) = 0\)</span> for all <span class="math notranslate nohighlight">\(x \in A^c\)</span>,} \
-&amp;= E[Y_i|A, W_{i}=0]  \quad &amp;&amp;\text{randomized setting.} \
-\end{aligned}
-\end{equation}</p>
-<p>The expected value of <span class="math notranslate nohighlight">\(\pi\)</span> is a weighted average of value within each region:</p>
-<p>\begin{align} \tag{5.4} \label{pi-pop-value}
-E[Y(\pi(X_i))] &amp;= E[Y_i | A, W_i = 1] P(A) +  E[Y_i | A^c, W_i = 0] P(A^c), \
-\end{align}</p>
-<p>where we denote the probability of drawn a covariate from <span class="math notranslate nohighlight">\(A\)</span> as <span class="math notranslate nohighlight">\(P(A)\)</span>. In a randomized setting, we can estimate \eqref{pi-pop-value} by replacing population quantities by simple empirical counterparts based on sample averages; i.e., estimating <span class="math notranslate nohighlight">\(E[Y_i | A, W_i = 1]\)</span> by the sample average of outcomes among treated individuals in region <span class="math notranslate nohighlight">\(A\)</span>, <span class="math notranslate nohighlight">\(E[Y_i | A^c, W_i = 0]\)</span> by the sample average of outcomes among untreated individuals not in region <span class="math notranslate nohighlight">\(A\)</span>, and <span class="math notranslate nohighlight">\(P(A)\)</span> and <span class="math notranslate nohighlight">\(P(A^c)\)</span> by the proportions of individuals inside and outside of region <span class="math notranslate nohighlight">\(A\)</span>.</p>
+<p>We’ll consider the behavior of the policy $\pi$ separately within each region. In the “treatment” region $A$, its average outcome is the same as the average outcome for the treated population.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-0d276c3e-643e-49d2-8c3a-fe254920ad21">
+<span class="eqno">(5.2)<a class="headerlink" href="#equation-0d276c3e-643e-49d2-8c3a-fe254920ad21" title="Permalink to this equation">¶</a></span>\[\begin{equation} \tag{5.2}
+  \begin{aligned}
+    E[Y_i(\pi(X_i)) \ | \ A] 
+      &amp;= E[Y_i(1)|A]  \quad &amp;&amp;\text{because $\pi(x) = 1$ for all $x \in A$,} \\
+      &amp;= E[Y_i|A, W_{i}=1]  \quad &amp;&amp;\text{randomized setting.} \\
+  \end{aligned}
+\end{equation}\]</div>
+<p>In the remaining region $A^c$, its average outcome is the same as the average outcome for the untreated population.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-26cb3c7c-84b7-4e34-bb00-095131e10132">
+<span class="eqno">(5.3)<a class="headerlink" href="#equation-26cb3c7c-84b7-4e34-bb00-095131e10132" title="Permalink to this equation">¶</a></span>\[\begin{equation} \tag{5.3}
+  \begin{aligned}
+    E[Y_i(\pi(X_i)) \ | \ A^c] 
+      &amp;= E[Y_i(0)|A^c]  \quad &amp;&amp;\text{because $\pi(x) = 0$ for all $x \in A^c$,} \\
+      &amp;= E[Y_i|A, W_{i}=0]  \quad &amp;&amp;\text{randomized setting.} \\
+  \end{aligned}
+\end{equation}\]</div>
+<p>The expected value of $\pi$ is a weighted average of value within each region:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-0544baa0-241f-4f63-a11c-445aa7b59b79">
+<span class="eqno">(5.4)<a class="headerlink" href="#equation-0544baa0-241f-4f63-a11c-445aa7b59b79" title="Permalink to this equation">¶</a></span>\[\begin{align} \tag{5.4} \label{pi-pop-value}
+    E[Y(\pi(X_i))] &amp;= E[Y_i | A, W_i = 1] P(A) +  E[Y_i | A^c, W_i = 0] P(A^c), \\
+\end{align}\]</div>
+<p>where we denote the probability of drawn a covariate from $A$ as $P(A)$. In a randomized setting, we can estimate \eqref{pi-pop-value} by replacing population quantities by simple empirical counterparts based on sample averages; i.e., estimating $E[Y_i | A, W_i = 1]$ by the sample average of outcomes among treated individuals in region $A$, $E[Y_i | A^c, W_i = 0]$ by the sample average of outcomes among untreated individuals not in region $A$, and $P(A)$ and $P(A^c)$ by the proportions of individuals inside and outside of region $A$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only valid in randomized setting.</span>
@@ -530,23 +537,26 @@ E[Y(\pi(X_i))] &amp;= E[Y_i | A, W_i = 1] P(A) +  E[Y_i | A^c, W_i = 0] P(A^c), 
 </div>
 </div>
 </div>
-<p>For another example, let’s consider the value of a  <em>random</em> policy <span class="math notranslate nohighlight">\(\pi'\)</span> that would assign observations to treatment and control with probability <span class="math notranslate nohighlight">\(p\)</span>:</p>
-<p>\begin{equation}
-\pi(X_i) = Z_i \qquad Z_i \sim^{iid} \text{Binomial}(p).
-\end{equation}</p>
-<p>To identify the value of this policy, follow the same argument as above. However, instead of thinking in terms of “regions”, consider the output of the random variable <span class="math notranslate nohighlight">\(Z_i\)</span>:</p>
-<p>\begin{equation} \label{region-a}
-\begin{aligned}
-E[Y_i(\pi’(X_i)) \ | \ Z_i = 1]
-&amp;= E[Y_i(1)| Z_i = 1] \quad &amp;&amp;\text{because <span class="math notranslate nohighlight">\(\pi'(\cdot) = 1\)</span> when <span class="math notranslate nohighlight">\(Z_i = 1\)</span>,} \
-&amp;= E[Y_i(1)]          \quad &amp;&amp;\text{<span class="math notranslate nohighlight">\(Z_i\)</span> is drawn independently,} \
-&amp;= E[Y_i| W_{i}=1]  \quad &amp;&amp;\text{randomized setting.} \
-\end{aligned}
-\end{equation}</p>
-<p>We can proceed similarly for the case of <span class="math notranslate nohighlight">\(Z_i = 0\)</span>. Finally, since <span class="math notranslate nohighlight">\(P(Z_i = 1) = p\)</span>,</p>
-<p>\begin{equation}  \tag{5.5}
-E[Y_i(\pi’(X_i))] = pE[Y_i | W_i=1] + (1-p)E[Y_i | W_i = 0],
-\end{equation}</p>
+<p>For another example, let’s consider the value of a  <em>random</em> policy $\pi’$ that would assign observations to treatment and control with probability $p$:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-7b919759-fc74-4766-be46-576fb3db22b9">
+<span class="eqno">(5.5)<a class="headerlink" href="#equation-7b919759-fc74-4766-be46-576fb3db22b9" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+  \pi(X_i) = Z_i \qquad Z_i \sim^{iid} \text{Binomial}(p).
+\end{equation}\]</div>
+<p>To identify the value of this policy, follow the same argument as above. However, instead of thinking in terms of “regions”, consider the output of the random variable $Z_i$:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-366f1842-117f-4d84-ad11-42ca1a6bf5ff">
+<span class="eqno">(5.6)<a class="headerlink" href="#equation-366f1842-117f-4d84-ad11-42ca1a6bf5ff" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{region-a}
+  \begin{aligned}
+    E[Y_i(\pi'(X_i)) \ | \ Z_i = 1]
+      &amp;= E[Y_i(1)| Z_i = 1] \quad &amp;&amp;\text{because $\pi'(\cdot) = 1$ when $Z_i = 1$,} \\ 
+      &amp;= E[Y_i(1)]          \quad &amp;&amp;\text{$Z_i$ is drawn independently,} \\
+      &amp;= E[Y_i| W_{i}=1]  \quad &amp;&amp;\text{randomized setting.} \\
+  \end{aligned}
+\end{equation}\]</div>
+<p>We can proceed similarly for the case of $Z_i = 0$. Finally, since $P(Z_i = 1) = p$,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-a39cb295-366b-43d5-b48f-6cd7aee6466f">
+<span class="eqno">(5.7)<a class="headerlink" href="#equation-a39cb295-366b-43d5-b48f-6cd7aee6466f" title="Permalink to this equation">¶</a></span>\[\begin{equation}  \tag{5.5}
+  E[Y_i(\pi'(X_i))] = pE[Y_i | W_i=1] + (1-p)E[Y_i | W_i = 0],
+\end{equation}\]</div>
 <p>which in a randomized setting can be estimated in a manner analogous to the previous example.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -566,23 +576,26 @@ E[Y_i(\pi’(X_i))] = pE[Y_i | W_i=1] + (1-p)E[Y_i | W_i = 0],
 </div>
 <section id="estimating-difference-in-values">
 <h3><span class="section-number">5.1.1. </span>Estimating difference in values<a class="headerlink" href="#estimating-difference-in-values" title="Permalink to this headline">¶</a></h3>
-<p>Next, let’s estimate the difference in value between two given policies. For a concrete example, let’s consider the gain from switching to <span class="math notranslate nohighlight">\(\pi\)</span> defined in (5.1) from a policy <span class="math notranslate nohighlight">\(\pi''\)</span> that never treats, i.e., <span class="math notranslate nohighlight">\(\pi''(X_i) \equiv 0\)</span>. That is,</p>
-<p>\begin{equation} \tag{5.6} \label{diff-0}
-E[Y(\pi(X_i)) - Y(\pi’’(X_i))].
-\end{equation}</p>
-<p>We already derived the value of <span class="math notranslate nohighlight">\(\pi\)</span> in (5.5). To derive the value of the second policy,</p>
-<p>\begin{align} \tag{5.7} \label{ey0-expand}
-&amp;E[Y(\pi’’(X_i))] \
-&amp;= E[Y_i(0)] &amp;&amp; \text{<span class="math notranslate nohighlight">\(\pi''(x) = 0\)</span> for all <span class="math notranslate nohighlight">\(x\)</span>,}  \
-&amp;= E[Y_i(0)|A]P(A) + E[Y_i(0)|A^c]P(A^c) &amp;&amp; \text{law of total expectation,} \
-&amp;= E[Y|A,W=0]P(A) + E[Y|A^c,W=0]P(A^c) &amp;&amp;\text{randomized setting.}
-\end{align}</p>
+<p>Next, let’s estimate the difference in value between two given policies. For a concrete example, let’s consider the gain from switching to $\pi$ defined in (5.1) from a policy $\pi’’$ that never treats, i.e., $\pi’’(X_i) \equiv 0$. That is,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-43ffb265-b3db-4dcf-a35d-e3f373fcfb24">
+<span class="eqno">(5.8)<a class="headerlink" href="#equation-43ffb265-b3db-4dcf-a35d-e3f373fcfb24" title="Permalink to this equation">¶</a></span>\[\begin{equation} \tag{5.6} \label{diff-0}
+  E[Y(\pi(X_i)) - Y(\pi''(X_i))].
+\end{equation}\]</div>
+<p>We already derived the value of $\pi$ in (5.5). To derive the value of the second policy,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-9c934b2a-065f-4263-b4dc-acc864d4698f">
+<span class="eqno">(5.9)<a class="headerlink" href="#equation-9c934b2a-065f-4263-b4dc-acc864d4698f" title="Permalink to this equation">¶</a></span>\[\begin{align} \tag{5.7} \label{ey0-expand}
+  &amp;E[Y(\pi''(X_i))] \\ 
+    &amp;= E[Y_i(0)] &amp;&amp; \text{$\pi''(x) = 0$ for all $x$,}  \\
+    &amp;= E[Y_i(0)|A]P(A) + E[Y_i(0)|A^c]P(A^c) &amp;&amp; \text{law of total expectation,} \\
+    &amp;= E[Y|A,W=0]P(A) + E[Y|A^c,W=0]P(A^c) &amp;&amp;\text{randomized setting.} 
+\end{align}\]</div>
 <p>Substituting (5.5) and \eqref{ey0-expand} into \eqref{diff-0} and simplifying,</p>
-<p>\begin{equation} \tag{5.8} \label{diff-0-result}
-E[Y(\pi(X_i)) - Y(\pi’’(X_i))]
-= \left( E[Y_i|A, W_i=1] - E[Y_i|A,W_i=0] \right) \cdot P(A) + 0 \cdot P(A^c)
-\end{equation}</p>
-<p>Expression \eqref{diff-0-result} has the following intepretation. In region <span class="math notranslate nohighlight">\(A\)</span>, the policy  <span class="math notranslate nohighlight">\(\pi\)</span> treats, and the “never treat” policy does not; thus the gain in region <span class="math notranslate nohighlight">\(A\)</span> is the average treatment effect in that region, <span class="math notranslate nohighlight">\(E[Y_i(1) - Y_i(0)|A]\)</span>, which in a randomized setting equals the first term in parentheses. In region <span class="math notranslate nohighlight">\(A^{c}\)</span>, the policy <span class="math notranslate nohighlight">\(\pi\)</span> does not treat, but neither does the “never treat” policy. Therefore, there the different is exactly zero. The expected difference in values equals the weighted average of the difference in values within each region.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-b5ccca89-4ea7-4fdb-84cc-a45f2d112175">
+<span class="eqno">(5.10)<a class="headerlink" href="#equation-b5ccca89-4ea7-4fdb-84cc-a45f2d112175" title="Permalink to this equation">¶</a></span>\[\begin{equation} \tag{5.8} \label{diff-0-result}
+  E[Y(\pi(X_i)) - Y(\pi''(X_i))]
+    = \left( E[Y_i|A, W_i=1] - E[Y_i|A,W_i=0] \right) \cdot P(A) + 0 \cdot P(A^c) 
+\end{equation}\]</div>
+<p>Expression \eqref{diff-0-result} has the following intepretation. In region $A$, the policy  $\pi$ treats, and the “never treat” policy does not; thus the gain in region $A$ is the average treatment effect in that region, $E[Y_i(1) - Y_i(0)|A]$, which in a randomized setting equals the first term in parentheses. In region $A^{c}$, the policy $\pi$ does not treat, but neither does the “never treat” policy. Therefore, there the different is exactly zero. The expected difference in values equals the weighted average of the difference in values within each region.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only valid in randomized settings.</span>
@@ -599,19 +612,21 @@ E[Y(\pi(X_i)) - Y(\pi’’(X_i))]
 </div>
 </div>
 </div>
-<p>For another example, let’s consider the difference in value between <span class="math notranslate nohighlight">\(\pi\)</span> and a <em>random</em> policy <span class="math notranslate nohighlight">\(\pi'\)</span> that assigns observations to treatment and control with equal probability <span class="math notranslate nohighlight">\(p = 1/2\)</span>. We have already derived an expression for value of the random policy in (5.5). Subtracting it from the value of the policy <span class="math notranslate nohighlight">\(\pi\)</span> derived in (5.4) and simplifying,</p>
-<p>\begin{align} \label{pi-pip-diff-results} \tag{5.9}
-E[Y(\pi) - Y(\pi’(X_i))]
-&amp;= \frac{P(A)}{2} \left( E[Y_i(1) - Y_i(0) | A] \right) +
-\frac{P(A^c)}{2} \left( E[Y_i(0) - Y_i(1) | A^c] \right)
-\end{align}</p>
-<p>Here’s how to interpret \eqref{pi-pip-diff-results}. In region <span class="math notranslate nohighlight">\(A\)</span>, policy <span class="math notranslate nohighlight">\(\pi\)</span> treats everyone, obtaining average value <span class="math notranslate nohighlight">\(E[Y_i(1)|A]\)</span>; meanwhile, policy <span class="math notranslate nohighlight">\(\pi'\)</span> treats half the observations (i.e., it treats each individual with one-half probability), obtaining average value <span class="math notranslate nohighlight">\((E[Y_i(1) + Y_i(0)|A])/2\)</span>. Subtracting the two gives the term multiplying <span class="math notranslate nohighlight">\(P(A)\)</span> in \eqref{pi-pip-diff-results}. In region <span class="math notranslate nohighlight">\(A^c\)</span>, policy <span class="math notranslate nohighlight">\(\pi\)</span> treats no one, obtaining average value <span class="math notranslate nohighlight">\(E[Y_i(0)|A]\)</span>; meanwhile, policy <span class="math notranslate nohighlight">\(\pi'\)</span> still obtains <span class="math notranslate nohighlight">\((E[Y_i(1) + Y_i(0)|A^c])/2\)</span> for the same reasons as above. Subtracting the two gives the term multiplying <span class="math notranslate nohighlight">\(P(A^c)\)</span> \eqref{pi-pip-diff-results}. Expression \eqref{pi-pip-diff-results} is the average of these two terms weighted by the size of each region.</p>
+<p>For another example, let’s consider the difference in value between $\pi$ and a <em>random</em> policy $\pi’$ that assigns observations to treatment and control with equal probability $p = 1/2$. We have already derived an expression for value of the random policy in (5.5). Subtracting it from the value of the policy $\pi$ derived in (5.4) and simplifying,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-0446e7ab-0d66-47ef-97b9-beb7dd0a9fdd">
+<span class="eqno">(5.11)<a class="headerlink" href="#equation-0446e7ab-0d66-47ef-97b9-beb7dd0a9fdd" title="Permalink to this equation">¶</a></span>\[\begin{align} \label{pi-pip-diff-results} \tag{5.9}
+  E[Y(\pi) - Y(\pi'(X_i))] 
+    &amp;= \frac{P(A)}{2} \left( E[Y_i(1) - Y_i(0) | A] \right) +
+      \frac{P(A^c)}{2} \left( E[Y_i(0) - Y_i(1) | A^c] \right) 
+\end{align}\]</div>
+<p>Here’s how to interpret \eqref{pi-pip-diff-results}. In region $A$, policy $\pi$ treats everyone, obtaining average value $E[Y_i(1)|A]$; meanwhile, policy $\pi’$ treats half the observations (i.e., it treats each individual with one-half probability), obtaining average value $(E[Y_i(1) + Y_i(0)|A])/2$. Subtracting the two gives the term multiplying $P(A)$ in \eqref{pi-pip-diff-results}. In region $A^c$, policy $\pi$ treats no one, obtaining average value $E[Y_i(0)|A]$; meanwhile, policy $\pi’$ still obtains $(E[Y_i(1) + Y_i(0)|A^c])/2$ for the same reasons as above. Subtracting the two gives the term multiplying $P(A^c)$ \eqref{pi-pip-diff-results}. Expression \eqref{pi-pip-diff-results} is the average of these two terms weighted by the size of each region.</p>
 <p>Finally, in a randomized setting, \eqref{pi-pip-diff-results} is equivalent to</p>
-<p>\begin{align}
-\frac{P(A)}{2} \left( E[Y|A,W=1] - E[Y|A,W=0] \right) +
-\frac{P(A^c)}{2} \left( E[Y|A^c,W=0] - E[Y|A,W=1] \right),
-\end{align}
-which suggests an estimator based on sample averages as above.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-3f7c4afb-9554-4c15-88bc-929440855504">
+<span class="eqno">(5.12)<a class="headerlink" href="#equation-3f7c4afb-9554-4c15-88bc-929440855504" title="Permalink to this equation">¶</a></span>\[\begin{align}
+\frac{P(A)}{2} \left( E[Y|A,W=1] - E[Y|A,W=0] \right) + 
+        \frac{P(A^c)}{2} \left( E[Y|A^c,W=0] - E[Y|A,W=1] \right),
+\end{align}\]</div>
+<p>which suggests an estimator based on sample averages as above.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only valid in randomized settings.</span>
@@ -645,7 +660,7 @@ which suggests an estimator based on sample averages as above.</p>
 </div>
 </div>
 </div>
-<p>The next plot illustrates how treatment assignment isn’t independent from observed covariates. Individuals with high values of <span class="math notranslate nohighlight">\(X_{i,1}\)</span> and <span class="math notranslate nohighlight">\(X_{i,2}\)</span> are more likely to be treated and to have higher outcomes.</p>
+<p>The next plot illustrates how treatment assignment isn’t independent from observed covariates. Individuals with high values of $X_{i,1}$ and $X_{i,2}$ are more likely to be treated and to have higher outcomes.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_norm</span> <span class="o">=</span> <span class="p">(</span><span class="n">Y</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">Y</span><span class="p">))</span><span class="o">/</span><span class="p">(</span><span class="nb">max</span><span class="p">(</span><span class="n">Y</span><span class="p">)</span> <span class="o">-</span> <span class="nb">min</span><span class="p">(</span><span class="n">Y</span><span class="p">))</span>
@@ -679,23 +694,26 @@ which suggests an estimator based on sample averages as above.</p>
 <font size=1>
 If we "naively" used the estimators based on sample averages above, the policy value estimate would be biased. Would the bias be upward or downward?
 </font>
-<p>In randomized setting and observational settings with unconfoundedness and overlap, there exists estimates of policy values and differences that are more efficient (i.e., they have smaller variance in large samples) than their counterparts based on sample averages. These are based on the <em>AIPW scores</em> that we studied in previous chapters. For example, to estimate the <span class="math notranslate nohighlight">\(E[Y_i(1)]\)</span></p>
-<p>\begin{align} \tag{5.10} \label{gamma-1}
-\hat {\Gamma}_{i,1}
-&amp;= \hat{\mu}^{-i}(X_i, 1) + \frac{W_i}{\hat{e}^{-i}(X_i)} \left(Y_i -\hat{\mu}^{-i}(X_i, 1)\right)
-\end{align}</p>
-<p>As we discussed in the chapter on ATE, averaging over AIPW scores \eqref{gamma-1} across individuals yields an unbiased / consistent estimator of <span class="math notranslate nohighlight">\(\E[Y_i(1)]\)</span> provided that at least one of <span class="math notranslate nohighlight">\(\hat{\mu}^{-i}(x, 1)\)</span> or <span class="math notranslate nohighlight">\(\hat{e}^{-i}(x)\)</span> is an unbiased / consistent estimator of the outcome model <span class="math notranslate nohighlight">\(\mu(x,w) := E[Y_i(w)|X_i=x]\)</span> or propensity model <span class="math notranslate nohighlight">\(e(x) := P[W_i=1|X_i=x]\)</span>. Provided that these are estimates using non-parametric methods like forests or neural networks, consistency should be guaranteed, and in addition the resulting estimates should have smaller asymptotic variance. Therefore, barring computational issues, AIPW-based estimates are usually superior to estimates based on sample means, even in randomized settings (though, for completeness, the latter should still be reported when valid).</p>
+<p>In randomized setting and observational settings with unconfoundedness and overlap, there exists estimates of policy values and differences that are more efficient (i.e., they have smaller variance in large samples) than their counterparts based on sample averages. These are based on the <em>AIPW scores</em> that we studied in previous chapters. For example, to estimate the $E[Y_i(1)]$</p>
+<div class="amsmath math notranslate nohighlight" id="equation-35942f70-3437-4f56-8c5c-8fb3ebab57ed">
+<span class="eqno">(5.13)<a class="headerlink" href="#equation-35942f70-3437-4f56-8c5c-8fb3ebab57ed" title="Permalink to this equation">¶</a></span>\[\begin{align} \tag{5.10} \label{gamma-1}
+  \hat {\Gamma}_{i,1}
+    &amp;= \hat{\mu}^{-i}(X_i, 1) + \frac{W_i}{\hat{e}^{-i}(X_i)} \left(Y_i -\hat{\mu}^{-i}(X_i, 1)\right) 
+\end{align}\]</div>
+<p>As we discussed in the chapter on ATE, averaging over AIPW scores \eqref{gamma-1} across individuals yields an unbiased / consistent estimator of $\E[Y_i(1)]$ provided that at least one of $\hat{\mu}^{-i}(x, 1)$ or $\hat{e}^{-i}(x)$ is an unbiased / consistent estimator of the outcome model $\mu(x,w) := E[Y_i(w)|X_i=x]$ or propensity model $e(x) := P[W_i=1|X_i=x]$. Provided that these are estimates using non-parametric methods like forests or neural networks, consistency should be guaranteed, and in addition the resulting estimates should have smaller asymptotic variance. Therefore, barring computational issues, AIPW-based estimates are usually superior to estimates based on sample means, even in randomized settings (though, for completeness, the latter should still be reported when valid).</p>
 <p>For the control, we have the following estimator based on AIPW scores,</p>
-<p>\begin{align} \tag{5.11}  \label{gamma-0}
-\hat {\Gamma}_{i,0}
-&amp;= \hat{\mu}^{-i}(X_i, 0) + \frac{1-W_i}{1-\hat{e}^{-i}(X_i)} \left(Y_i -\hat{\mu}^{-i}(X_i, 0)\right).
-\end{align}</p>
-<p>To estimate the value of a binary policy <span class="math notranslate nohighlight">\(\pi\)</span>, we average over AIPW scores, selecting \eqref{gamma-1} or \eqref{gamma-0} for each individual depending on whether the policy dictates that the individual should be treated or not. That is, we estimate the value of a policy <span class="math notranslate nohighlight">\(\pi\)</span> via the following average,</p>
-<p>\begin{align}
-\frac{1}{n} \sum_{i=1}^n \hat {\Gamma}<em>{i,\pi(X_i)}
-\qquad<br />
-\hat {\Gamma}</em>{i,\pi(X_i)} := \pi(X_i) \hat {\Gamma}<em>{i,1} + (1 - \pi(X_i)) \hat {\Gamma}</em>{i,0}.
-\end{align}</p>
+<div class="amsmath math notranslate nohighlight" id="equation-af292dc8-a15c-4d75-97cf-ddcf349216d9">
+<span class="eqno">(5.14)<a class="headerlink" href="#equation-af292dc8-a15c-4d75-97cf-ddcf349216d9" title="Permalink to this equation">¶</a></span>\[\begin{align} \tag{5.11}  \label{gamma-0}
+  \hat {\Gamma}_{i,0} 
+    &amp;= \hat{\mu}^{-i}(X_i, 0) + \frac{1-W_i}{1-\hat{e}^{-i}(X_i)} \left(Y_i -\hat{\mu}^{-i}(X_i, 0)\right).
+\end{align}\]</div>
+<p>To estimate the value of a binary policy $\pi$, we average over AIPW scores, selecting \eqref{gamma-1} or \eqref{gamma-0} for each individual depending on whether the policy dictates that the individual should be treated or not. That is, we estimate the value of a policy $\pi$ via the following average,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-288510b3-fc92-4867-b35c-5488d9f69553">
+<span class="eqno">(5.15)<a class="headerlink" href="#equation-288510b3-fc92-4867-b35c-5488d9f69553" title="Permalink to this equation">¶</a></span>\[\begin{align} 
+  \frac{1}{n} \sum_{i=1}^n \hat {\Gamma}_{i,\pi(X_i)} 
+  \qquad  
+  \hat {\Gamma}_{i,\pi(X_i)} := \pi(X_i) \hat {\Gamma}_{i,1} + (1 - \pi(X_i)) \hat {\Gamma}_{i,0}.
+\end{align}\]</div>
 <p>The next snippet construct AIPW scores via causal forests.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -823,10 +841,11 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 </div>
-<p>To estimate the difference in value between two policies <span class="math notranslate nohighlight">\(\pi\)</span> and <span class="math notranslate nohighlight">\(\tilde{\pi}\)</span>, simply subtract the scores,
-\begin{align}
-\frac{1}{n} \sum_{i=1}^n \hat {\Gamma}<em>{i,\pi(X_i)} - \hat {\Gamma}</em>{i,\tilde{\pi}(X_i)}.
-\end{align}</p>
+<p>To estimate the difference in value between two policies $\pi$ and $\tilde{\pi}$, simply subtract the scores,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-bec71996-70e7-4081-b3f8-fc5ac0c2b0ac">
+<span class="eqno">(5.16)<a class="headerlink" href="#equation-bec71996-70e7-4081-b3f8-fc5ac0c2b0ac" title="Permalink to this equation">¶</a></span>\[\begin{align}
+  \frac{1}{n} \sum_{i=1}^n \hat {\Gamma}_{i,\pi(X_i)} - \hat {\Gamma}_{i,\tilde{\pi}(X_i)}.
+\end{align}\]</div>
 <p>For example, here we estimate the difference between policy and the “never treat” policy.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -894,15 +913,16 @@ If we "naively" used the estimators based on sample averages above, the policy v
 </div>
 </div>
 </div>
-<p>We’ll take the following policy as an example. It asks individuals who are older (age &gt; 50) or more conservative (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> <span class="math notranslate nohighlight">\(\leq\)</span> 4) if they think the government spends to much on “welfare”, and it asks yonger and more liberal individuals if they think the government spends too much on “assistance to the poor”.</p>
-<p>\begin{equation} \tag{5.12} \label{polage}
-(#eq:polage)
-\pi(x) =
-\begin{cases}
-1 \qquad \text{if }\texttt{polviews} \leq 4 \text{ OR } \texttt{age } &gt; 50  \
-0 \qquad \text{otherwise}
-\end{cases}
-\end{equation}</p>
+<p>We’ll take the following policy as an example. It asks individuals who are older (age &gt; 50) or more conservative (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> $\leq$ 4) if they think the government spends to much on “welfare”, and it asks yonger and more liberal individuals if they think the government spends too much on “assistance to the poor”.</p>
+<div class="amsmath math notranslate nohighlight" id="equation-b14422a4-3350-4b2c-a275-068159fdcfe4">
+<span class="eqno">(5.17)<a class="headerlink" href="#equation-b14422a4-3350-4b2c-a275-068159fdcfe4" title="Permalink to this equation">¶</a></span>\[\begin{equation} \tag{5.12} \label{polage}
+  (\#eq:polage)
+  \pi(x) =
+    \begin{cases}
+      1 \qquad \text{if }\texttt{polviews} \leq 4 \text{ OR } \texttt{age } &gt; 50  \\
+      0 \qquad \text{otherwise}
+    \end{cases}
+\end{equation}\]</div>
 <p>We should expect that a higher number of individuals will answer ‘yes’ because, presumably, older and more conservative individuals in this sample may be more likely to be against welfare in the United States.</p>
 <p>We selected policy \eqref{polage} purely for illustrative purposes, but it’s not hard to come up with examples where understanding how to word certain questions and prompts can be useful. For example, a non-profit that champions assistance to the poor may be able to obtain more donations if they advertise themselves as champions of “welfare” or “assistance to the poor” to different segments of the population.</p>
 <p>Since this is a randomized setting, we can estimate its value via sample averages.</p>

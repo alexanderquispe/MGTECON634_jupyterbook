@@ -195,3 +195,9 @@ sphinx:
 
 google_analytics:
   mytrackingcode: UA-205698170-1
+
+parse:
+  myst_enable_extensions:
+    # don't forget to list any other extensions you want enabled,
+    # including those that are enabled by default!
+    - amsmath
