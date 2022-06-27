@@ -79,6 +79,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.jpg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Machine Learning-based Causal Inference Tutorial</h1>
@@ -422,25 +427,27 @@ const thebe_selector_output = ".output, .cell_output"
 <p>Note: If you’d like to run the code below on a different dataset, you can replace the dataset above with another <code class="docutils literal notranslate"><span class="pre">data.frame</span></code> of your choice, and redefine the key variable identifiers (<code class="docutils literal notranslate"><span class="pre">outcome</span></code>, <code class="docutils literal notranslate"><span class="pre">covariates</span></code>) accordingly. Although we try to make the code as general as possible, you may also need to make a few minor changes to the code below; read the comments carefully.</p>
 <section id="key-concepts">
 <h2><span class="section-number">2.1. </span>Key concepts<a class="headerlink" href="#key-concepts" title="Permalink to this headline">¶</a></h2>
-<p>The prediction problem is to accurately guess the value of some output variable <span class="math notranslate nohighlight">\(Y_i\)</span> from input variables <span class="math notranslate nohighlight">\(X_i\)</span>. For example, we might want to predict “house prices given house characteristics such as the number of rooms, age of the building, and so on. The relationship between input and output is modeled in very general terms by some function</p>
-<p>\begin{equation}\label{eq:true-model} \tag{2.1}
-Y_i = f(X_i) + \epsilon_i
-\end{equation}</p>
-<p>where <span class="math notranslate nohighlight">\(\epsilon_i\)</span> represents all that is not captured by information obtained from <span class="math notranslate nohighlight">\(X_i\)</span> via the mapping <span class="math notranslate nohighlight">\(f\)</span>. We say that error <span class="math notranslate nohighlight">\(\epsilon_i\)</span> is irreducible.</p>
-<p>We highlight that \eqref{eq:true-model} is <strong>not modeling a causal relationship</strong> between inputs and outputs. For an extreme example, consider taking <span class="math notranslate nohighlight">\(Y_i\)</span> to be “distance from the equator” and <span class="math notranslate nohighlight">\(X_i\)</span> to be “average temperature.” We can still think of the problem of guessing (“predicting”) “distance from the equator” given some information about “average temperature,” even though one would expect the former to cause the latter.</p>
-<p>In general, we can’t know the “ground truth”  <span class="math notranslate nohighlight">\(f\)</span>, so we will approximate it from data. Given <span class="math notranslate nohighlight">\(n\)</span> data points <span class="math notranslate nohighlight">\(\{(X_1, Y_1), \cdots, (X_n, Y_n)\}\)</span>, our goal is to obtain an estimated model  <span class="math notranslate nohighlight">\(\hat{f}\)</span> such that our predictions <span class="math notranslate nohighlight">\(\widehat{Y}_i := \hat{f}(X_i)\)</span> are “close” to the true outcome values <span class="math notranslate nohighlight">\(Y_i\)</span> given some criterion. To formalize this, we’ll follow these three steps:</p>
+<p>The prediction problem is to accurately guess the value of some output variable $Y_i$ from input variables $X_i$. For example, we might want to predict “house prices given house characteristics such as the number of rooms, age of the building, and so on. The relationship between input and output is modeled in very general terms by some function</p>
+<div class="amsmath math notranslate nohighlight" id="equation-054d94f8-301a-40c1-a98d-b53c084cd125">
+<span class="eqno">(2.1)<a class="headerlink" href="#equation-054d94f8-301a-40c1-a98d-b53c084cd125" title="Permalink to this equation">¶</a></span>\[\begin{equation}\label{eq:true-model} \tag{2.1}
+  Y_i = f(X_i) + \epsilon_i
+\end{equation}\]</div>
+<p>where $\epsilon_i$ represents all that is not captured by information obtained from $X_i$ via the mapping $f$. We say that error $\epsilon_i$ is irreducible.</p>
+<p>We highlight that \eqref{eq:true-model} is <strong>not modeling a causal relationship</strong> between inputs and outputs. For an extreme example, consider taking $Y_i$ to be “distance from the equator” and $X_i$ to be “average temperature.” We can still think of the problem of guessing (“predicting”) “distance from the equator” given some information about “average temperature,” even though one would expect the former to cause the latter.</p>
+<p>In general, we can’t know the “ground truth”  $f$, so we will approximate it from data. Given $n$ data points ${(X_1, Y_1), \cdots, (X_n, Y_n)}$, our goal is to obtain an estimated model  $\hat{f}$ such that our predictions $\widehat{Y}_i := \hat{f}(X_i)$ are “close” to the true outcome values $Y_i$ given some criterion. To formalize this, we’ll follow these three steps:</p>
 <ul class="simple">
 <li><p><strong>Modeling:</strong> Decide on some suitable class of functions that our estimated model may belong to. In machine learning applications the class of functions can be very large and complex (e.g., deep decision trees, forests, high-dimensional linear models, etc). Also, we must decide on a loss function that serves as our criterion to evaluate the quality of our predictions (e.g., mean-squared error).</p></li>
-<li><p><strong>Fitting:</strong> Find the estimate <span class="math notranslate nohighlight">\(\hat{f}\)</span> that optimizes the loss function chosen in the previous step (e.g., the tree that minimizes the squared deviation between <span class="math notranslate nohighlight">\(\hat{f}(X_i)\)</span> and <span class="math notranslate nohighlight">\(Y_i\)</span> in our data).</p></li>
-<li><p><strong>Evaluation:</strong> Evaluate our fitted model <span class="math notranslate nohighlight">\(\hat{f}\)</span>. That is, if we were given a new, yet unseen, input and output pair <span class="math notranslate nohighlight">\((X',Y')\)</span>, we’d like to know if <span class="math notranslate nohighlight">\(Y' \approx \hat{f}(X_i)\)</span> by some metric.</p></li>
+<li><p><strong>Fitting:</strong> Find the estimate $\hat{f}$ that optimizes the loss function chosen in the previous step (e.g., the tree that minimizes the squared deviation between $\hat{f}(X_i)$ and $Y_i$ in our data).</p></li>
+<li><p><strong>Evaluation:</strong> Evaluate our fitted model $\hat{f}$. That is, if we were given a new, yet unseen, input and output pair $(X’,Y’)$, we’d like to know if $Y’ \approx \hat{f}(X_i)$ by some metric.</p></li>
 </ul>
-<p>For concreteness, let’s work through an example. Let’s say that, given the data simulated above, we’d like to predict <span class="math notranslate nohighlight">\(Y_i\)</span> from the first covariate  <span class="math notranslate nohighlight">\(X_{i1}\)</span> only. Also, let’s say that our model class will be polynomials of degree <span class="math notranslate nohighlight">\(q\)</span> in <span class="math notranslate nohighlight">\(X_{i1}\)</span>, and we’ll evaluate fit based on mean squared error. That is, <span class="math notranslate nohighlight">\(\hat{f}(X_{i1}) = \hat{b}_0 + X_{i1}\hat{b}_1 + \cdots + X_{i1}^q \hat{b}_q\)</span>, where the coefficients are obtained by solving the following problem:
-\begin{equation}
-\hat{b} = \arg\min_b \sum_{i=1}^m
-\left(Y_i - b_0 - X_{i1}b_1 - \cdots - X_{iq}^q b_q \right)^2
-\end{equation}
-An important question is what is <span class="math notranslate nohighlight">\(q\)</span>, the degree of the polynomial. It controls the complexity of the model. One may imagine that more complex models are better, but that is not always true, because a very flexible model may try to simply interpolate over the data at hand, but fail to generalize well for new data points. We call this <strong>overfitting</strong>. The main feature of overfitting is <strong>high variance</strong>, in the sense that, if we were given a different data set of the same size, we’d likely get a very different model.</p>
-<p>To illustrate, in the figure below we let the degree be  <span class="math notranslate nohighlight">\(q=10\)</span> but use only the first few data points. The fitted model is shown in green, and the original data points are in red.</p>
+<p>For concreteness, let’s work through an example. Let’s say that, given the data simulated above, we’d like to predict $Y_i$ from the first covariate  $X_{i1}$ only. Also, let’s say that our model class will be polynomials of degree $q$ in $X_{i1}$, and we’ll evaluate fit based on mean squared error. That is, $\hat{f}(X_{i1}) = \hat{b}<em>0 + X</em>{i1}\hat{b}<em>1 + \cdots + X</em>{i1}^q \hat{b}_q$, where the coefficients are obtained by solving the following problem:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-d9a44634-6af0-49ad-b98f-374e95e4f0f0">
+<span class="eqno">(2.2)<a class="headerlink" href="#equation-d9a44634-6af0-49ad-b98f-374e95e4f0f0" title="Permalink to this equation">¶</a></span>\[\begin{equation}
+  \hat{b} = \arg\min_b \sum_{i=1}^m
+    \left(Y_i - b_0 - X_{i1}b_1 - \cdots - X_{iq}^q b_q \right)^2
+\end{equation}\]</div>
+<p>An important question is what is $q$, the degree of the polynomial. It controls the complexity of the model. One may imagine that more complex models are better, but that is not always true, because a very flexible model may try to simply interpolate over the data at hand, but fail to generalize well for new data points. We call this <strong>overfitting</strong>. The main feature of overfitting is <strong>high variance</strong>, in the sense that, if we were given a different data set of the same size, we’d likely get a very different model.</p>
+<p>To illustrate, in the figure below we let the degree be  $q=10$ but use only the first few data points. The fitted model is shown in green, and the original data points are in red.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="s1">&#39;x&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
@@ -488,8 +495,8 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 <img alt="_images/2_Introduction_to_Machine_Learning_10_1.png" src="_images/2_Introduction_to_Machine_Learning_10_1.png" />
 </div>
 </div>
-<p>On the other hand, when <span class="math notranslate nohighlight">\(q\)</span> is too small relative to our data, we permit only very simple models and may suffer from misspecification bias. We call this <strong>underfitting</strong>. The main feature of underfitting is <strong>high bias</strong> – the selected model just isn’t complex enough to accurately capture the relationship between input and output variables.</p>
-<p>To illustrate underfitting, in the figure below we set <span class="math notranslate nohighlight">\(q=1\)</span> (a linear fit).</p>
+<p>On the other hand, when $q$ is too small relative to our data, we permit only very simple models and may suffer from misspecification bias. We call this <strong>underfitting</strong>. The main feature of underfitting is <strong>high bias</strong> – the selected model just isn’t complex enough to accurately capture the relationship between input and output variables.</p>
+<p>To illustrate underfitting, in the figure below we set $q=1$ (a linear fit).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note: this code assumes that the first covariate is continuous</span>
@@ -526,7 +533,7 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 </div>
 </div>
 <p>This tension is called the <strong>bias-variance trade-off</strong>: simpler models underfit and have more bias, more complex models overfit and have more variance.</p>
-<p>One data-driven way of deciding an appropriate level of complexity is to divide the available data into a training set (where the model is fit) and the validation set (where the model is evaluated). The next snippet of code uses the first half of the data to fit a polynomial of order <span class="math notranslate nohighlight">\(q\)</span>, and then evaluates that polynomial on the second half. The training MSE estimate decreases monotonically with the polynomial degree, because the model is better able to fit on the training data; the test MSE estimate starts increasing after a while reflecting that the model no longer generalizes well.</p>
+<p>One data-driven way of deciding an appropriate level of complexity is to divide the available data into a training set (where the model is fit) and the validation set (where the model is evaluated). The next snippet of code uses the first half of the data to fit a polynomial of order $q$, and then evaluates that polynomial on the second half. The training MSE estimate decreases monotonically with the polynomial degree, because the model is better able to fit on the training data; the test MSE estimate starts increasing after a while reflecting that the model no longer generalizes well.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># polynomial degrees that we&#39;ll loop over</span>
@@ -593,7 +600,7 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 <img alt="_images/2_Introduction_to_Machine_Learning_15_1.png" src="_images/2_Introduction_to_Machine_Learning_15_1.png" />
 </div>
 </div>
-<p>To make better use of the data we will often divide the data into <span class="math notranslate nohighlight">\(K\)</span> subsets, or <em>folds</em>. Then one fits <span class="math notranslate nohighlight">\(K\)</span> models, each using  <span class="math notranslate nohighlight">\(K-1\)</span> folds and then evaluation the fitted model on the remaining fold. This is called <strong>k-fold cross-validation</strong>.</p>
+<p>To make better use of the data we will often divide the data into $K$ subsets, or <em>folds</em>. Then one fits $K$ models, each using  $K-1$ folds and then evaluation the fitted model on the remaining fold. This is called <strong>k-fold cross-validation</strong>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1">#cv = KFold(n_splits=10, random_state=1, shuffle=True)</span>
@@ -872,22 +879,24 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 <section id="generalized-linear-models">
 <h3><span class="section-number">2.2.1. </span>Generalized linear models<a class="headerlink" href="#generalized-linear-models" title="Permalink to this headline">¶</a></h3>
 <p>This class of models extends common methods such as linear and logistic regression by adding a penalty to the magnitude of the coefficients. <strong>Lasso</strong> penalizes the absolute value of slope coefficients. For regression problems, it becomes</p>
-<p>\begin{equation}\label{eq:lasso}\tag{2.2}
-\hat{b}<em>{Lasso} = \arg\min_b \sum</em>{i=1}^m
-\left( Y_i - b_0 - X_{i1}b_1 - \cdots - X_{ip}b_p \right)^2
-- \lambda \sum_{j=1}^p |b_j|
-\end{equation}</p>
-<p>Similarly, in a regression problem <strong>Ridge</strong> penalizes the sum of squares of the slope coefficients,
-\begin{equation}\label{eq:ridge}\tag{2.3}
-\hat{b}<em>{Ridge} = \arg\min_b \sum</em>{i=1}^m
-\left( Y_i - b_0 - X_{i1}b_1 - \cdots - X_{ip}b_p \right)^2
-- \lambda \sum_{j=1}^p b_j^2
-\end{equation}</p>
+<div class="amsmath math notranslate nohighlight" id="equation-a2f20446-87bf-4c1a-a682-23aaa6b57341">
+<span class="eqno">(2.3)<a class="headerlink" href="#equation-a2f20446-87bf-4c1a-a682-23aaa6b57341" title="Permalink to this equation">¶</a></span>\[\begin{equation}\label{eq:lasso}\tag{2.2}
+  \hat{b}_{Lasso} = \arg\min_b \sum_{i=1}^m
+    \left( Y_i - b_0 - X_{i1}b_1 - \cdots - X_{ip}b_p \right)^2
+    - \lambda \sum_{j=1}^p |b_j|
+\end{equation}\]</div>
+<p>Similarly, in a regression problem <strong>Ridge</strong> penalizes the sum of squares of the slope coefficients,</p>
+<div class="amsmath math notranslate nohighlight" id="equation-c61f4def-e2fc-496f-bd93-18abacb862e9">
+<span class="eqno">(2.4)<a class="headerlink" href="#equation-c61f4def-e2fc-496f-bd93-18abacb862e9" title="Permalink to this equation">¶</a></span>\[\begin{equation}\label{eq:ridge}\tag{2.3}
+  \hat{b}_{Ridge} = \arg\min_b \sum_{i=1}^m
+    \left( Y_i - b_0 - X_{i1}b_1 - \cdots - X_{ip}b_p \right)^2
+    - \lambda \sum_{j=1}^p b_j^2
+\end{equation}\]</div>
 <p>Also, there exists the <strong>Elastic Net</strong> penalization which consists of a convex combination between the other two. In all cases, the scalar parameter
-<span class="math notranslate nohighlight">\(\lambda\)</span> controls the complexity of the model. For <span class="math notranslate nohighlight">\(\lambda=0\)</span>, the problem reduces to the “usual” linear regression. As <span class="math notranslate nohighlight">\(\lambda\)</span> increases, we favor simpler models. As we’ll see below, the optimal parameter <span class="math notranslate nohighlight">\(\lambda\)</span> is selected via cross-validation.</p>
+$\lambda$ controls the complexity of the model. For $\lambda=0$, the problem reduces to the “usual” linear regression. As $\lambda$ increases, we favor simpler models. As we’ll see below, the optimal parameter $\lambda$ is selected via cross-validation.</p>
 <p>An important feature of Lasso-type penalization is that it promotes <strong>sparsity</strong> – that is, it forces many coefficients to be exactly zero. This is different from Ridge-type penalization, which forces coefficients to be small.</p>
 <p>Another interesting property of these models is that, even though they are called “linear” models, this should actually be understood as <strong>linear in transformations</strong> of the covariates. For example, we could use polynomials or splines (continuous piecewise polynomials) of the covariates and allow for much more flexible models.</p>
-<p>In fact, because of the penalization term, problems \eqref{eq:lasso} and \eqref{eq:ridge} remain well-defined and have a unique solution even in <strong>high-dimensional</strong> problems in which the number of coefficients <span class="math notranslate nohighlight">\(p\)</span> is larger than the sample size <span class="math notranslate nohighlight">\(n\)</span> – that is, our data is “fat” with more columns than rows. These situations can arise either naturally (e.g. genomics problems in which we have hundreds of thousands of gene expression information for a few individuals) or because we are including many transformations of a smaller set of covariates.</p>
+<p>In fact, because of the penalization term, problems \eqref{eq:lasso} and \eqref{eq:ridge} remain well-defined and have a unique solution even in <strong>high-dimensional</strong> problems in which the number of coefficients $p$ is larger than the sample size $n$ – that is, our data is “fat” with more columns than rows. These situations can arise either naturally (e.g. genomics problems in which we have hundreds of thousands of gene expression information for a few individuals) or because we are including many transformations of a smaller set of covariates.</p>
 <p>Finally, although here we are focusing on regression problems, other generalized linear models such as logistic regression can also be similarly modified by adding a Lasso, Ridge, or Elastic Net-type penalty to similar consequences.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -972,7 +981,7 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 <img alt="_images/2_Introduction_to_Machine_Learning_35_1.png" src="_images/2_Introduction_to_Machine_Learning_35_1.png" />
 </div>
 </div>
-<p>Here are the first few estimated coefficients at the <span class="math notranslate nohighlight">\(\lambda\)</span> value that minimizes cross-validated MSE. Note that many estimated coefficients them are exactly zero.</p>
+<p>Here are the first few estimated coefficients at the $\lambda$ value that minimizes cross-validated MSE. Note that many estimated coefficients them are exactly zero.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Estimated coefficients at the lambda value that minimized cross-validated MSE</span>
@@ -1058,7 +1067,7 @@ An important question is what is <span class="math notranslate nohighlight">\(q\
 </div>
 </div>
 </div>
-<p>The next command plots estimated coefficients as a function of the regularization parameter <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>The next command plots estimated coefficients as a function of the regularization parameter $\lambda$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coefs</span> <span class="o">=</span> <span class="p">[]</span>
@@ -1187,9 +1196,9 @@ Notes:
 </div>
 </div>
 </div>
-<p>The phenomenon above occurs in Lasso and in any other sparsity-promoting method when correlated covariates are present since, by forcing coefficients to be zero, Lasso is effectively dropping them from the model. And as we have seen, as a variable gets dropped, a different variable that is correlated with it can “pick up” its effect, which in turn can cause bias. Once <span class="math notranslate nohighlight">\(\lambda\)</span> grows sufficiently large, the penalization term overwhelms any benefit of having that variable in the model, so that variable finally decreases to zero too.</p>
+<p>The phenomenon above occurs in Lasso and in any other sparsity-promoting method when correlated covariates are present since, by forcing coefficients to be zero, Lasso is effectively dropping them from the model. And as we have seen, as a variable gets dropped, a different variable that is correlated with it can “pick up” its effect, which in turn can cause bias. Once $\lambda$ grows sufficiently large, the penalization term overwhelms any benefit of having that variable in the model, so that variable finally decreases to zero too.</p>
 <p>One may instead consider using Lasso to select a subset of variables, and then regressing the outcome on the subset of selected variables via OLS (without any penalization). This method is often called <strong>post-lasso</strong>. Although it has desirable properties in terms of model fit (see e.g., <a class="reference external" href="https://arxiv.org/pdf/1001.0188.pdf">Belloni and Chernozhukov, 2013</a>), this procedure does not solve the omitted variable issue we mentioned above.</p>
-<p>We illustrate this next. We observe the path of the estimated coefficient on the number of bathroooms (<code class="docutils literal notranslate"><span class="pre">BATHS</span></code>) as we increase <span class="math notranslate nohighlight">\(\lambda\)</span>.</p>
+<p>We illustrate this next. We observe the path of the estimated coefficient on the number of bathroooms (<code class="docutils literal notranslate"><span class="pre">BATHS</span></code>) as we increase $\lambda$.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># prepare data</span>
@@ -1265,7 +1274,7 @@ Notes:
 <img alt="_images/2_Introduction_to_Machine_Learning_49_1.png" src="_images/2_Introduction_to_Machine_Learning_49_1.png" />
 </div>
 </div>
-<p>The OLS coefficients are not penalized, so they remain constant. Ridge estimates decrease monotonically as <span class="math notranslate nohighlight">\(\lambda\)</span> grows. Also, for this dataset, Lasso estimates first increase and then decrease. Meanwhile, the post-lasso coefficient estimates seem to behave somewhat erratically with <span class="math notranslate nohighlight">\(lambda\)</span>. To understand this behavior, let’s see what happens to the magnitude of other selected variables that are correlated with <code class="docutils literal notranslate"><span class="pre">BATHS</span></code>.</p>
+<p>The OLS coefficients are not penalized, so they remain constant. Ridge estimates decrease monotonically as $\lambda$ grows. Also, for this dataset, Lasso estimates first increase and then decrease. Meanwhile, the post-lasso coefficient estimates seem to behave somewhat erratically with $lambda$. To understand this behavior, let’s see what happens to the magnitude of other selected variables that are correlated with <code class="docutils literal notranslate"><span class="pre">BATHS</span></code>.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">scale_X</span> <span class="o">=</span> <span class="n">StandardScaler</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
@@ -1302,7 +1311,7 @@ Notes:
 </div>
 </div>
 <p>Note how the discrete jumps in magnitude for the <code class="docutils literal notranslate"><span class="pre">BATHS</span></code> coefficient in the first coincide with, for example, variables <code class="docutils literal notranslate"><span class="pre">DINING</span></code> and <code class="docutils literal notranslate"><span class="pre">BEDRMS</span></code> being exactly zero. As these variables got dropped from the model, the coefficient on <code class="docutils literal notranslate"><span class="pre">BATHS</span></code> increased to pick up their effect.</p>
-<p>Another problem with Lasso coefficients is their instability. When multiple variables are highly correlated we may spuriously drop several of them. To get a sense of the amount of variability, in the next snippet we fix <span class="math notranslate nohighlight">\(\lambda\)</span> and then look at the lasso coefficients estimated during cross-validation. We see that by simply removing one fold we can get a very different set of coefficients (nonzero coefficients are in black in the heatmap below). This is because there may be many choices of coefficients with similar predictive power, so the set of nonzero coefficients we end up with can be quite unstable.</p>
+<p>Another problem with Lasso coefficients is their instability. When multiple variables are highly correlated we may spuriously drop several of them. To get a sense of the amount of variability, in the next snippet we fix $\lambda$ and then look at the lasso coefficients estimated during cross-validation. We see that by simply removing one fold we can get a very different set of coefficients (nonzero coefficients are in black in the heatmap below). This is because there may be many choices of coefficients with similar predictive power, so the set of nonzero coefficients we end up with can be quite unstable.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
@@ -2446,7 +2455,7 @@ Notes:
 <p>63 rows × 4 columns</p>
 </div></div></div>
 </div>
-<p>The next heatmap visualizes the results. Note how observations ranked higher (i.e., were predicted to have higher prices) have more bedrooms and baths, were built more recently, have fewer cracks, and so on. The next snippet of code displays the average covariate per group along with each standard errors. The rows are ordered according to <span class="math notranslate nohighlight">\(Var(E[X_{ij} | G_i) / Var(X_i)\)</span>, where <span class="math notranslate nohighlight">\(G_i\)</span> denotes the ranking. This is a rough normalized measure of how much variation is “explained” by group membership <span class="math notranslate nohighlight">\(G_i\)</span>. Brighter colors indicate larger values.</p>
+<p>The next heatmap visualizes the results. Note how observations ranked higher (i.e., were predicted to have higher prices) have more bedrooms and baths, were built more recently, have fewer cracks, and so on. The next snippet of code displays the average covariate per group along with each standard errors. The rows are ordered according to $Var(E[X_{ij} | G_i) / Var(X_i)$, where $G_i$ denotes the ranking. This is a rough normalized measure of how much variation is “explained” by group membership $G_i$. Brighter colors indicate larger values.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">new_data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -2516,9 +2525,9 @@ Notes:
 <section id="decision-tree">
 <h3><span class="section-number">2.2.2. </span>Decision Tree<a class="headerlink" href="#decision-tree" title="Permalink to this headline">¶</a></h3>
 <p>This next class of algorithms divides the covariate space into “regions” and estimates a constant prediction within each region.</p>
-<p>To estimate a decision tree, we following a recursive partition algorithm. At each stage, we select one variable <span class="math notranslate nohighlight">\(j\)</span> and one split point
-<span class="math notranslate nohighlight">\(s\)</span>, and divide the observations into “left” and “right” subsets, depending on whether <span class="math notranslate nohighlight">\(X_{ij} \leq s\)</span> or <span class="math notranslate nohighlight">\(X_{ij} &gt; s\)</span>. For regression problems, the variable and split points are often selected so that the sum of the variances of the outcome variable in each “child” subset is smallest. For classification problems, we split to separate the classes. Then, for each child, we separately repeat the process of finding variables and split points. This continues until a minimum subset size is reached, or improvement falls below some threshold.</p>
-<p>At prediction time, to find the predictions for some point <span class="math notranslate nohighlight">\(x\)</span>, we just follow the tree we just built, going left or right according to the selected variables and split points, until we reach a terminal node. Then, for regression problems, the predicted value at some point <span class="math notranslate nohighlight">\(x\)</span> is the average outcome of the observations in the same partition as the point <span class="math notranslate nohighlight">\(x\)</span>. For classification problems, we output the majority class in the node.</p>
+<p>To estimate a decision tree, we following a recursive partition algorithm. At each stage, we select one variable $j$ and one split point
+$s$, and divide the observations into “left” and “right” subsets, depending on whether $X_{ij} \leq s$ or $X_{ij} &gt; s$. For regression problems, the variable and split points are often selected so that the sum of the variances of the outcome variable in each “child” subset is smallest. For classification problems, we split to separate the classes. Then, for each child, we separately repeat the process of finding variables and split points. This continues until a minimum subset size is reached, or improvement falls below some threshold.</p>
+<p>At prediction time, to find the predictions for some point $x$, we just follow the tree we just built, going left or right according to the selected variables and split points, until we reach a terminal node. Then, for regression problems, the predicted value at some point $x$ is the average outcome of the observations in the same partition as the point $x$. For classification problems, we output the majority class in the node.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="kn">import</span> <span class="n">DecisionTreeRegressor</span>
@@ -3568,11 +3577,12 @@ Notes:
 <img alt="_images/2_Introduction_to_Machine_Learning_72_1.png" src="_images/2_Introduction_to_Machine_Learning_72_1.png" />
 </div>
 </div>
-<p>To reduce the complexity of the tree, we <strong>prune</strong> the tree: we collapse its leaves, permitting bias to increase but forcing variance to decrease until the desired trade-off is achieved. In <code class="docutils literal notranslate"><span class="pre">rpart</span></code>, this is done by considering a modified loss function that takes into account the number of terminal nodes (i.e., the number of regions in which the original data was partitioned). Somewhat heuristically, if we denote tree predictions by <span class="math notranslate nohighlight">\(T(x)\)</span> and its number of terminal nodes by  <span class="math notranslate nohighlight">\(|T|\)</span>, the modified regression problem can be written as:</p>
-<p>\begin{equation}\label{eq:pruned-tree}\tag{2.4}
-\widehat{T} = \arg\min_{T} \sum_{i=1}^m \left( T(X_i) - Y_i \right)^2 + c_p |T|
-\end{equation}</p>
-<p>The complexity of the tree is controlled by the scalar parameter <span class="math notranslate nohighlight">\(c_p\)</span>, denoted as <code class="docutils literal notranslate"><span class="pre">ccp_alpha</span></code> in <code class="docutils literal notranslate"><span class="pre">sklearn.tree.DecisionTreeRegressor</span></code>. For each value of <span class="math notranslate nohighlight">\(c_p\)</span>, we find the subtree that solves \eqref{eq:pruned-tree}. Large values of <span class="math notranslate nohighlight">\(c_p\)</span> lead to aggressively pruned trees, which have more bias and less variance. Small values of <span class="math notranslate nohighlight">\(c_p\)</span> allow for deeper trees whose predictions can vary more wildly.</p>
+<p>To reduce the complexity of the tree, we <strong>prune</strong> the tree: we collapse its leaves, permitting bias to increase but forcing variance to decrease until the desired trade-off is achieved. In <code class="docutils literal notranslate"><span class="pre">rpart</span></code>, this is done by considering a modified loss function that takes into account the number of terminal nodes (i.e., the number of regions in which the original data was partitioned). Somewhat heuristically, if we denote tree predictions by $T(x)$ and its number of terminal nodes by  $|T|$, the modified regression problem can be written as:</p>
+<div class="amsmath math notranslate nohighlight" id="equation-9e25b94a-7b24-419f-8856-e4455763d0d5">
+<span class="eqno">(2.5)<a class="headerlink" href="#equation-9e25b94a-7b24-419f-8856-e4455763d0d5" title="Permalink to this equation">¶</a></span>\[\begin{equation}\label{eq:pruned-tree}\tag{2.4}
+  \widehat{T} = \arg\min_{T} \sum_{i=1}^m \left( T(X_i) - Y_i \right)^2 + c_p |T|
+\end{equation}\]</div>
+<p>The complexity of the tree is controlled by the scalar parameter $c_p$, denoted as <code class="docutils literal notranslate"><span class="pre">ccp_alpha</span></code> in <code class="docutils literal notranslate"><span class="pre">sklearn.tree.DecisionTreeRegressor</span></code>. For each value of $c_p$, we find the subtree that solves \eqref{eq:pruned-tree}. Large values of $c_p$ lead to aggressively pruned trees, which have more bias and less variance. Small values of $c_p$ allow for deeper trees whose predictions can vary more wildly.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">max_depth</span> <span class="o">=</span> <span class="p">[]</span>
@@ -4563,7 +4573,7 @@ Std.Err.  0.005925  0.008682  0.010648  0.014518
 </div>
 </div>
 </div>
-<p>Finally, as we did in the linear model case, we can use the same code for an annotated version of the same information. Again, we ordered the rows in decreasing order based on an estimate of the relative variance “explained” by leaf membership: <span class="math notranslate nohighlight">\(Var(E[X_i|L_i]) / Var(X_i)\)</span>, where <span class="math notranslate nohighlight">\(L_i\)</span> represents the leaf.</p>
+<p>Finally, as we did in the linear model case, we can use the same code for an annotated version of the same information. Again, we ordered the rows in decreasing order based on an estimate of the relative variance “explained” by leaf membership: $Var(E[X_i|L_i]) / Var(X_i)$, where $L_i$ represents the leaf.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">()</span>
@@ -4626,7 +4636,7 @@ Std.Err.  0.005925  0.008682  0.010648  0.014518
 <section id="forest">
 <h3><span class="section-number">2.2.3. </span>Forest<a class="headerlink" href="#forest" title="Permalink to this headline">¶</a></h3>
 <p>Forests are a type of <strong>ensemble</strong> estimators: they aggregate information about many decision trees to compute a new estimate that typically has much smaller variance.</p>
-<p>At a high level, the process of fitting a (regression) forest consists of fitting many decision trees, each on a different subsample of the data. The forest prediction for a particular point <span class="math notranslate nohighlight">\(x\)</span> is the average of all tree predictions for that point.</p>
+<p>At a high level, the process of fitting a (regression) forest consists of fitting many decision trees, each on a different subsample of the data. The forest prediction for a particular point $x$ is the average of all tree predictions for that point.</p>
 <p>One interesting aspect of forests and many other ensemble methods is that cross-validation can be built into the algorithm itself. Since each tree only uses a subset of the data, the remaining subset is effectively a test set for that tree. We call these observations <strong>out-of-bag</strong> (there were not in the “bag” of training observations). They can be used to evaluate the performance of that tree, and the average of out-of-bag evaluations is evidence of the performance of the forest itself.</p>
 <p>For the example below, we’ll use the regression_forest function of the <code class="docutils literal notranslate"><span class="pre">R</span></code> package <code class="docutils literal notranslate"><span class="pre">grf</span></code>. The particular forest implementation in <code class="docutils literal notranslate"><span class="pre">grf</span></code> has interesting properties that are absent from most other packages. For example, trees are build using a certain sample-splitting scheme that ensures that predictions are approximately unbiased and normally distributed for large samples, which in turn allows us to compute valid confidence intervals around those predictions. We’ll have more to say about the importance of these features when we talk about causal estimates in future chapters. See also the grf website for more information.</p>
 <div class="cell docutils container">

@@ -79,6 +79,11 @@ const thebe_selector_output = ".output, .cell_output"
         <div class="navbar-brand-box">
     <a class="navbar-brand text-wrap" href="index.html">
       
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="_static/logo.jpg" class="logo" alt="logo">
       
       
       <h1 class="site-logo" id="site-title">Machine Learning-based Causal Inference Tutorial</h1>
@@ -403,15 +408,17 @@ const thebe_selector_output = ".output, .cell_output"
 <h1><span class="section-number">4. </span>HTE I: Binary treatment<a class="headerlink" href="#hte-i-binary-treatment" title="Permalink to this headline">¶</a></h1>
 <p>Source RMD file: <a class="reference external" href="https://docs.google.com/uc?export=download&amp;id=1FSUi4WLfYYKnvWsNWypiQORhkqf5IlFP">link</a></p>
 <p>In the previous chapter, we learned how to estimate the effect of a binary treatment averaged over the entire population. However, the average may obscure important details about how different individuals react to the treatment. In this chapter, we will learn how to estimate the <strong>conditional average treatment effect (CATE)</strong>,</p>
-<p>\begin{equation} \label{cate}  \tag{4.1}
-\tau(x) := \mathbf{E}[Y_i(1) - Y_i(0) | X_i = x],
-\end{equation}
-which is a “localized” version of the average treatment effect conditional on a vector of observable characteristics.</p>
-<p>It’s often the case that \eqref{cate} is too general to be immediately useful, especially when the observable covariates are high-dimensional. It can be hard to estimate reliably without making strong modeling assumptions, and hard to summarize in a useful manner after estimation. In such situations, we will instead try to estimate treatment effect averages for simpler groups
-\begin{equation} \label{cate-g} \tag{4.2}
-\mathbf{E}[Y_i(1) - Y_i(0) | G_i = g],
-\end{equation}
-where <span class="math notranslate nohighlight">\(G_i\)</span> indexes subgroups of interest. Below you’ll learn how to estimate and test hypotheses about pre-defined subgroups, and also how to discover subgroups of interest from the data. In this tutorial, you will learn how to use estimates of \eqref{cate} to suggest relevant subgroups <span class="math notranslate nohighlight">\(G_i\)</span> (and in the next chapters you will find out other uses of \eqref{cate} in policy learning and evaluation).</p>
+<div class="amsmath math notranslate nohighlight" id="equation-c9e657c0-f00e-47d6-ac9c-29344408d84e">
+<span class="eqno">(4.1)<a class="headerlink" href="#equation-c9e657c0-f00e-47d6-ac9c-29344408d84e" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{cate}  \tag{4.1}
+  \tau(x) := \mathbf{E}[Y_i(1) - Y_i(0) | X_i = x],
+\end{equation}\]</div>
+<p>which is a “localized” version of the average treatment effect conditional on a vector of observable characteristics.</p>
+<p>It’s often the case that \eqref{cate} is too general to be immediately useful, especially when the observable covariates are high-dimensional. It can be hard to estimate reliably without making strong modeling assumptions, and hard to summarize in a useful manner after estimation. In such situations, we will instead try to estimate treatment effect averages for simpler groups</p>
+<div class="amsmath math notranslate nohighlight" id="equation-fbd778ed-1418-4ed3-adf4-ad904007b6f3">
+<span class="eqno">(4.2)<a class="headerlink" href="#equation-fbd778ed-1418-4ed3-adf4-ad904007b6f3" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{cate-g} \tag{4.2}
+  \mathbf{E}[Y_i(1) - Y_i(0) | G_i = g],
+\end{equation}\]</div>
+<p>where $G_i$ indexes subgroups of interest. Below you’ll learn how to estimate and test hypotheses about pre-defined subgroups, and also how to discover subgroups of interest from the data. In this tutorial, you will learn how to use estimates of \eqref{cate} to suggest relevant subgroups $G_i$ (and in the next chapters you will find out other uses of \eqref{cate} in policy learning and evaluation).</p>
 <p>We’ll continue using the abridged version of the General Social Survey (GSS) <a class="reference external" href="https://gss.norc.org/Documents/reports/project-reports/GSSProject%20report32.pdf">(Smith, 2016)</a> dataset that was introduced in the previous chapter. In this dataset, individuals were sent to treatment or control with equal probability, so we are in a randomized setting. However, many of the techniques and code shown below should also work in an observational setting provided that unconfoundedness and overlap are satisfied (these assumptions were defined in the previous chapter).</p>
 <p>As with other chapters in this tutorial, the code below should still work by replacing the next snippet of code with a different dataset, provided that you update the key variables <code class="docutils literal notranslate"><span class="pre">treatment</span></code>, <code class="docutils literal notranslate"><span class="pre">outcome</span></code>, and <code class="docutils literal notranslate"><span class="pre">covariates</span></code> below. Also, please make sure to read the comments as they may be subtle differences depending on whether your dataset was created in a randomized or observational setting.</p>
 <div class="cell docutils container">
@@ -435,28 +442,31 @@ where <span class="math notranslate nohighlight">\(G_i\)</span> indexes subgroup
 <section id="pre-specified-hypotheses">
 <h2><span class="section-number">4.1. </span>Pre-specified hypotheses<a class="headerlink" href="#pre-specified-hypotheses" title="Permalink to this headline">¶</a></h2>
 <p>We will begin by learning how to test pre-specified null hypotheses of the form</p>
-<p>\begin{equation} \label{hte-hyp} \tag{4.3}
-H_{0}: \mathbf{E}[Y(1) - Y(0) | G_i = 1] = \mathbf{E}[Y(1) - Y(0) | G_i = 0].
-\end{equation}</p>
+<div class="amsmath math notranslate nohighlight" id="equation-d7dbc55e-073b-4e92-ad64-9bd11bc373da">
+<span class="eqno">(4.3)<a class="headerlink" href="#equation-d7dbc55e-073b-4e92-ad64-9bd11bc373da" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{hte-hyp} \tag{4.3}
+  H_{0}: \mathbf{E}[Y(1) - Y(0) | G_i = 1] = \mathbf{E}[Y(1) - Y(0) | G_i = 0].
+\end{equation}\]</div>
 <p>That is, that the treatment effect is the same regardless of membership to some group
-<span class="math notranslate nohighlight">\(G_i\)</span>. Importantly, for now we’ll assume that the group <span class="math notranslate nohighlight">\(G_i\)</span> was <strong>pre-specified</strong> – it was decided <em>before</em> looking at the data.</p>
-<p>In a randomized setting, if the both the treatment  <span class="math notranslate nohighlight">\(W_i\)</span> and group membership <span class="math notranslate nohighlight">\(G_i\)</span> are binary, we can write</p>
-<p>\begin{equation} \label{linear} \tag{4.4}
-\mathbf{E}[Y_i(W_i)|G_i] = \mathbf{E}[Y_i|W_i, G_i] = \beta_0 + \beta_w W_i + \beta_g G_i + \beta_{wg} W_i G_i
-\end{equation}</p>
+$G_i$. Importantly, for now we’ll assume that the group $G_i$ was <strong>pre-specified</strong> – it was decided <em>before</em> looking at the data.</p>
+<p>In a randomized setting, if the both the treatment  $W_i$ and group membership $G_i$ are binary, we can write</p>
+<div class="amsmath math notranslate nohighlight" id="equation-c31363d6-06e4-479a-9fe3-612dfd82edda">
+<span class="eqno">(4.4)<a class="headerlink" href="#equation-c31363d6-06e4-479a-9fe3-612dfd82edda" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{linear} \tag{4.4}
+  \mathbf{E}[Y_i(W_i)|G_i] = \mathbf{E}[Y_i|W_i, G_i] = \beta_0 + \beta_w W_i + \beta_g G_i + \beta_{wg} W_i G_i
+\end{equation}\]</div>
 <font size=1>
 When $W_i$ and $G_i$ are binary, this decomposition is true without loss of generality. Why?
 </font>
-<p>This allows us to write the average effects of <span class="math notranslate nohighlight">\(W_i\)</span> and <span class="math notranslate nohighlight">\(G_i\)</span> on <span class="math notranslate nohighlight">\(Y_i\)</span> as</p>
-<p>\begin{equation} \label{decomp} \tag{4.5}
-\begin{aligned}
-\mathbf{E}[Y(1) | G_i=1] &amp;= \beta_0 + \beta_w W_i + \beta_g G_i + \beta_{wg} W_i G_i, \
-\mathbf{E}[Y(1) | G_i=0] &amp;= \beta_0 + \beta_w W_i,  \
-\mathbf{E}[Y(0) | G_i=1] &amp;= \beta_0 + \beta_g G_i,  \
-\mathbf{E}[Y(0) | G_i=0] &amp;= \beta_0.
-\end{aligned}
-\end{equation}</p>
-<p>Rewriting the null hypothesis \eqref{hte-hyp} in terms of the decomposition \eqref{decomp}, we see that it boils down to a test about the coefficient in the interaction: <span class="math notranslate nohighlight">\(\beta_{xw} = 0\)</span>. Here’s an example that tests whether the treatment effect is the same for “conservative” (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> &lt; 4) and “liberal” (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> <span class="math notranslate nohighlight">\(\geq\)</span> 4) individuals.</p>
+<p>This allows us to write the average effects of $W_i$ and $G_i$ on $Y_i$ as</p>
+<div class="amsmath math notranslate nohighlight" id="equation-f5d5e15b-b0cc-454f-b9d3-abac0a051c93">
+<span class="eqno">(4.5)<a class="headerlink" href="#equation-f5d5e15b-b0cc-454f-b9d3-abac0a051c93" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{decomp} \tag{4.5}
+  \begin{aligned}
+    \mathbf{E}[Y(1) | G_i=1] &amp;= \beta_0 + \beta_w W_i + \beta_g G_i + \beta_{wg} W_i G_i, \\
+    \mathbf{E}[Y(1) | G_i=0] &amp;= \beta_0 + \beta_w W_i,  \\
+    \mathbf{E}[Y(0) | G_i=1] &amp;= \beta_0 + \beta_g G_i,  \\
+    \mathbf{E}[Y(0) | G_i=0] &amp;= \beta_0.
+  \end{aligned}
+\end{equation}\]</div>
+<p>Rewriting the null hypothesis \eqref{hte-hyp} in terms of the decomposition \eqref{decomp}, we see that it boils down to a test about the coefficient in the interaction: $\beta_{xw} = 0$. Here’s an example that tests whether the treatment effect is the same for “conservative” (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> &lt; 4) and “liberal” (<code class="docutils literal notranslate"><span class="pre">polviews</span></code> $\geq$ 4) individuals.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Only valid in randomized settings</span>
@@ -493,11 +503,12 @@ w:conservative     0.1160      0.010     11.185      0.000       0.096       0.1
 Interpret the results above. The coefficient $\beta_{xw}$ is denoted by `w:conservativeTRUE`. Can we detect a difference in treatment effect for conservative vs liberal individuals? For whom is the effect larger?
 </font>
 <p>Sometimes there are many subgroups, leading to multiple hypotheses such as</p>
-<p>\begin{equation} \label{mult-hyp} \tag{4.6}
+<div class="amsmath math notranslate nohighlight" id="equation-d22f58c9-7e5b-4a2f-8ddf-a7aebe63d8ad">
+<span class="eqno">(4.6)<a class="headerlink" href="#equation-d22f58c9-7e5b-4a2f-8ddf-a7aebe63d8ad" title="Permalink to this equation">¶</a></span>\[\begin{equation} \label{mult-hyp} \tag{4.6}
 H_0: \mathbf{E}[Y(1) - Y(0) \ | \  G_i = 1] = \mathbf{E}[Y(1) - Y(0) \ | \  G_i = g]
 \qquad
 \text{for many values of }g.
-\end{equation}</p>
+\end{equation}\]</div>
 <p>In that case, we need to correct for the fact that we are testing for multiple hypotheses, or we will end up with many false positives. The <strong>Bonferroni correction</strong> <a class="reference external" href="https://en.wikipedia.org/wiki/Bonferroni_correction">(wiki)</a> is a common method for dealing with multiple hypothesis testing, though it is often too conservative to be useful. It is available via the function <code class="docutils literal notranslate"><span class="pre">p.adjust</span></code> from base <code class="docutils literal notranslate"><span class="pre">R</span></code>. The next snippet of code tests whether the treatment effect at each level of <code class="docutils literal notranslate"><span class="pre">polviews</span></code> is different from the treatment effect from <code class="docutils literal notranslate"><span class="pre">polviews</span></code> equals one.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -885,8 +896,8 @@ See the caveats in the documentation: https://pandas.pydata.org/pandas-docs/stab
 <font size=1>
 Compare the adjusted p-values under Romano-Wolf with those obtained via Bonferroni above.
 </font>
-<p>The Bonferroni and Romano-Wolf methods control the <strong>familywise error rate (FWER)</strong>, which is the (asymptotic) probability of rejecting even one true null hypothesis. In other words, for a significance level <span class="math notranslate nohighlight">\(\alpha\)</span>, they guarantee that with probability <span class="math notranslate nohighlight">\(1 - \alpha\)</span> we will make zero false discoveries. However, when the number of hypotheses being tested is very large, this criterion may be so stringent that it prevents us from being able to detect real effects. Instead, there exist alternative procedures that control the (asymptotic) <strong>false discovery rate (FDR)</strong>, defined as the expected proportion of true null hypotheses rejected among all hypotheses rejected. One such procedure is the Benjamini-Hochberg procedure, which is available in base R via <code class="docutils literal notranslate"><span class="pre">p.adjust(...,</span> <span class="pre">method=&quot;BH&quot;)</span></code>. For what remains we’ll stick with FWER control, but keep in mind that FDR control can also useful in exploratory analyses or settings in which there’s a very large number of hypotheses under consideration.</p>
-<p>As in the previous chapter, when working with observational data under unconfoundedness and overlap, one can use AIPW scores  <span class="math notranslate nohighlight">\(\hat{\Gamma}_i\)</span> in place of the raw outcomes  <span class="math notranslate nohighlight">\(Y_i\)</span>. In the next snippet, we construct AIPW scores using the <code class="docutils literal notranslate"><span class="pre">causal_forest</span></code> function from the <code class="docutils literal notranslate"><span class="pre">grf</span></code> package.</p>
+<p>The Bonferroni and Romano-Wolf methods control the <strong>familywise error rate (FWER)</strong>, which is the (asymptotic) probability of rejecting even one true null hypothesis. In other words, for a significance level $\alpha$, they guarantee that with probability $1 - \alpha$ we will make zero false discoveries. However, when the number of hypotheses being tested is very large, this criterion may be so stringent that it prevents us from being able to detect real effects. Instead, there exist alternative procedures that control the (asymptotic) <strong>false discovery rate (FDR)</strong>, defined as the expected proportion of true null hypotheses rejected among all hypotheses rejected. One such procedure is the Benjamini-Hochberg procedure, which is available in base R via <code class="docutils literal notranslate"><span class="pre">p.adjust(...,</span> <span class="pre">method=&quot;BH&quot;)</span></code>. For what remains we’ll stick with FWER control, but keep in mind that FDR control can also useful in exploratory analyses or settings in which there’s a very large number of hypotheses under consideration.</p>
+<p>As in the previous chapter, when working with observational data under unconfoundedness and overlap, one can use AIPW scores  $\hat{\Gamma}_i$ in place of the raw outcomes  $Y_i$. In the next snippet, we construct AIPW scores using the <code class="docutils literal notranslate"><span class="pre">causal_forest</span></code> function from the <code class="docutils literal notranslate"><span class="pre">grf</span></code> package.</p>
 </section>
 <section id="data-driven-hypotheses">
 <h2><span class="section-number">4.2. </span>Data-driven hypotheses<a class="headerlink" href="#data-driven-hypotheses" title="Permalink to this headline">¶</a></h2>
@@ -1173,7 +1184,7 @@ C:\Users\Roberto\anaconda3\lib\site-packages\numpy\core\_methods.py:254: Runtime
 <img alt="_images/4_heterogeneous_treatment_effect_1_30_1.png" src="_images/4_heterogeneous_treatment_effect_1_30_1.png" />
 </div>
 </div>
-<p>If the histogram is concentrated at a point, we may simply be underpowered: our method was not able to detect any heterogeneity, but maybe it would detect it if we had more data. If the histogram is spread out, we may be overfitting: our model is producing very noisy estimates <span class="math notranslate nohighlight">\(\widehat{\tau}(x)\)</span>, but in fact the true  <span class="math notranslate nohighlight">\(\tau(x)\)</span> can be much smoother as a function of <span class="math notranslate nohighlight">\(x\)</span>.</p>
+<p>If the histogram is concentrated at a point, we may simply be underpowered: our method was not able to detect any heterogeneity, but maybe it would detect it if we had more data. If the histogram is spread out, we may be overfitting: our model is producing very noisy estimates $\widehat{\tau}(x)$, but in fact the true  $\tau(x)$ can be much smoother as a function of $x$.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">grf</span></code> package also produces a measure of variable importance that indicates how often a variable was used in a tree split. Again, much like the histogram above, this can be a rough diagnostic, but it should not be interpreted as indicating that, for example, variable with low importance is not related to heterogeneity. The reasoning is the same as the one presented in the causal trees section: if two covariates are highly correlated, the trees might split on one covariate but not the other, even though both (or maybe neither) are relevant in the true data-generating process.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1263,8 +1274,8 @@ C:\Users\Roberto\anaconda3\lib\site-packages\numpy\core\_methods.py:254: Runtime
 <section id="data-driven-subgroups">
 <h4><span class="section-number">4.2.1.2. </span>Data-driven subgroups<a class="headerlink" href="#data-driven-subgroups" title="Permalink to this headline">¶</a></h4>
 <p>Just as with causal trees, we can use causal forests to divide our observations into subgroups. In place of leaves, we’ll rank observation into (say) quintiles according to their estimated CATE prediction; see, e.g., <a class="reference external" href="https://arxiv.org/abs/1712.04802">Chernozhukov, Demirer, Duflo, Fernández-Val (2020)</a> for similar ideas.</p>
-<p>There’s a subtle but important point that needs to be addressed here. As we have mentioned before, when predicting the conditional average treatment effect <span class="math notranslate nohighlight">\(\tau(X_i)\)</span> for observation <span class="math notranslate nohighlight">\(i\)</span> we should in general avoid using a model that was fitted using observation <span class="math notranslate nohighlight">\(i\)</span>. This sort of sample splitting (which we called <strong>honesty</strong> above) is one of the required ingredients to get unbiased estimates of the CATE using the methods described here. However, when ranking estimates of two observations <span class="math notranslate nohighlight">\(i\)</span> and <span class="math notranslate nohighlight">\(j\)</span>, we need something a little stronger: we must ensure that the model was not fit using <em>either</em> <span class="math notranslate nohighlight">\(i\)</span> <em>or</em> <span class="math notranslate nohighlight">\(j\)</span>’s data.</p>
-<p>One way of overcoming this obstacle is simple. First, divide the data into <span class="math notranslate nohighlight">\(K\)</span> folds (subsets). Then, cycle through the folds, fitting a CATE model on <span class="math notranslate nohighlight">\(K-1\)</span> folds. Next, for each held-out fold, <em>separately</em> rank the unseen observations into <span class="math notranslate nohighlight">\(Q\)</span> groups based on their prediction  (i.e., if <span class="math notranslate nohighlight">\(Q=5\)</span>, then we rank observations by estimated CATE into “top quintile”, “second quintile”, and so on). After concatenating the independent rankings together, we can study the differences in observations in each rank-group.</p>
+<p>There’s a subtle but important point that needs to be addressed here. As we have mentioned before, when predicting the conditional average treatment effect $\tau(X_i)$ for observation $i$ we should in general avoid using a model that was fitted using observation $i$. This sort of sample splitting (which we called <strong>honesty</strong> above) is one of the required ingredients to get unbiased estimates of the CATE using the methods described here. However, when ranking estimates of two observations $i$ and $j$, we need something a little stronger: we must ensure that the model was not fit using <em>either</em> $i$ <em>or</em> $j$’s data.</p>
+<p>One way of overcoming this obstacle is simple. First, divide the data into $K$ folds (subsets). Then, cycle through the folds, fitting a CATE model on $K-1$ folds. Next, for each held-out fold, <em>separately</em> rank the unseen observations into $Q$ groups based on their prediction  (i.e., if $Q=5$, then we rank observations by estimated CATE into “top quintile”, “second quintile”, and so on). After concatenating the independent rankings together, we can study the differences in observations in each rank-group.</p>
 <p><a class="reference external" href="https://gist.github.com/halflearned/bea4e5137c0c81fd18a75f682da466c8">This gist</a> computes the above for <code class="docutils literal notranslate"><span class="pre">grf</span></code>, and it should not be hard to modify it so as to replace forests by any other non-parametric method. However, for <code class="docutils literal notranslate"><span class="pre">grf</span></code> specifically, there’s a small trick that allows us to obtain a valid ranking: we can pass a vector of fold indices to the argument <code class="docutils literal notranslate"><span class="pre">clusters</span></code> and rank observations within each fold. This works because estimates for each fold (“cluster”)   trees are computed using trees that were not fit using observations from that fold. Here’s how to do it.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1305,7 +1316,7 @@ C:\Users\Roberto\anaconda3\lib\site-packages\numpy\core\_methods.py:254: Runtime
 </div>
 </div>
 </div>
-<p>The next snippet computes the average treatment effect within each group defined above, i.e.,  <span class="math notranslate nohighlight">\(\mathbf{E}[Y_{i}(0)|G_{i} = g]\)</span>. This can done in two ways. First, by computing a simple difference-in-means estimate of the ATE based on observations within each group. This is valid only in randomized settings.</p>
+<p>The next snippet computes the average treatment effect within each group defined above, i.e.,  $\mathbf{E}[Y_{i}(0)|G_{i} = g]$. This can done in two ways. First, by computing a simple difference-in-means estimate of the ATE based on observations within each group. This is valid only in randomized settings.</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Valid randomized data and observational data with unconfoundedness+overlap.</span>
@@ -1884,7 +1895,7 @@ The frame.append method is deprecated and will be removed from pandas in a futur
 </section>
 <section id="best-linear-projection">
 <h4><span class="section-number">4.2.1.3. </span>Best linear projection<a class="headerlink" href="#best-linear-projection" title="Permalink to this headline">¶</a></h4>
-<p>This function provides a doubly robust fit to the linear model <span class="math notranslate nohighlight">\(\widehat{\tau}(X_i) = \beta_0 + A_i'\beta_1\)</span>, where <span class="math notranslate nohighlight">\(A_i\)</span> can be a subset of the covariate columns. The coefficients in this regression are suggestive of general trends, but they should not be interpret as partial effects – that would only be true if the true model were really linear in covariates, and that’s an assumption we shouldn’t be willing to make in general</p>
+<p>This function provides a doubly robust fit to the linear model $\widehat{\tau}(X_i) = \beta_0 + A_i’\beta_1$, where $A_i$ can be a subset of the covariate columns. The coefficients in this regression are suggestive of general trends, but they should not be interpret as partial effects – that would only be true if the true model were really linear in covariates, and that’s an assumption we shouldn’t be willing to make in general</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># dataset from best linear proyection</span>
@@ -1999,8 +2010,8 @@ The frame.append method is deprecated and will be removed from pandas in a futur
 <section id="partial-dependence">
 <h4><span class="section-number">4.2.1.4. </span>Partial dependence<a class="headerlink" href="#partial-dependence" title="Permalink to this headline">¶</a></h4>
 <p>It may also be interesting to examine how our CATE estimates behave when we change a single covariate, while keeping all the other covariates at a some fixed value. In the plot below we evaluate a variable of interest across quantiles, while keeping all other covariates at their median.</p>
-<p>It is important to recognize that by keeping some variables at their median we may be evaluating the CATE at <span class="math notranslate nohighlight">\(x\)</span> values in regions where there are few or no data points. Also, it may be the case that varying some particular variable while keeping others fixed may just not be very interesting.</p>
-<p>In what follows we’ll again use <code class="docutils literal notranslate"><span class="pre">causal_forest</span></code> predictions, along with their variance estimates (set <code class="docutils literal notranslate"><span class="pre">estimate.variances=TRUE</span></code> when predicting to we get estimates of the asymptotic variance of the prediction for each point). Since <code class="docutils literal notranslate"><span class="pre">grf</span></code> predictions are asymptotically normal, we can construct 95% confidence intervals in the usual manner (i.e., <span class="math notranslate nohighlight">\(\hat{\tau}(x) \pm 1.96\sqrt{\widehat{\text{Var}}(\hat{\tau}(x))}\)</span>).</p>
+<p>It is important to recognize that by keeping some variables at their median we may be evaluating the CATE at $x$ values in regions where there are few or no data points. Also, it may be the case that varying some particular variable while keeping others fixed may just not be very interesting.</p>
+<p>In what follows we’ll again use <code class="docutils literal notranslate"><span class="pre">causal_forest</span></code> predictions, along with their variance estimates (set <code class="docutils literal notranslate"><span class="pre">estimate.variances=TRUE</span></code> when predicting to we get estimates of the asymptotic variance of the prediction for each point). Since <code class="docutils literal notranslate"><span class="pre">grf</span></code> predictions are asymptotically normal, we can construct 95% confidence intervals in the usual manner (i.e., $\hat{\tau}(x) \pm 1.96\sqrt{\widehat{\text{Var}}(\hat{\tau}(x))}$).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">selected_covariate</span> <span class="o">=</span> <span class="s2">&quot;polviews&quot;</span>
